@@ -1,0 +1,57 @@
+
+= 環境構築
+今回使用するScrapyフレームワークはPythonで動作します。
+そのためPythonを使用できるようにします。著者の環境はバージョン3.9を使用しますが、3系であれば問題ないです。
+
+2系は日本語処理に癖がある、将来的にサポート外になるなどがあるのでオススメしておりません。
+
+== macOSでのPython
+
+macOSではPythonがインストールされていますが、macOS 11 Big Surで入っているPythonのバージョンは2.7.16となるので、冒頭でも書いたとおり2系はススメていません。
+
+Pythonを3系に変更します。
+
+@<href>{https://www.python.org/, https://www.python.org/}で配布しているインストーラーでも、pyenv,Pipenvなどの管理ツールなど、またはbrewでインストールするのも良いと思います。Anaconda系はすでに入っている以外は、Pathを強制的に書き換えるなどクリーンな環境を望む人にはオススメしません。
+
+上記のインストールツールを使用してPythonの3系をインストールします。
+
+== Windows 10でのPython
+
+Windows 10ではPythonが入っておりません。
+
+macOSと同じく@<href>{https://www.python.org/, https://www.python.org/}で配布しているインストーラーで良いと思います。もしWSL2を使用しているなら、その環境にPythonの3系は自動的に入っております。それとmacOSと同じようにAnaconda系はオススメしません。
+
+上記のインストールツールを使用してPythonの3系をインストールします。
+
+== 環境を作る
+ソースコードを置くところを作成してから仮想環境の構築を行います。
+//list[venv][仮想環境構築][bash]{
+mkdir scrapy-sample-source
+python -m venv .venv
+//}
+
+環境を切り替えます。
+macOSやWSL2では、以下の方法で切り替えます。
+//list[mac][環境切り替え][bash]{
+source .venv/bin/activate
+//}
+
+コマンドプロンプトでは、以下の方法で切り替えます。
+//list[dos][環境切り替え][bash]{
+.venv\Scripts\activate.bat
+//}
+
+PowerShellでは、以下の方法で切り替えます。
+
+※実行許可がないときは、実行許可を与えてください
+//list[ps1][環境切り替え][bash]{
+.venv\Scripts\activate.ps1
+//}
+
+
+仮想環境を構築したら、Scrapyフレームワークをインストールします。
+//list[pip][Scrapyフレームワークのインストール][bash]{
+pip install scrapy
+//}
+
+これで環境ができました。あとは好きなエディターで読み込ませれば完了です。

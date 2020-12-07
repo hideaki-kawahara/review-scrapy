@@ -2,7 +2,11 @@ PREDEF:
   - preface.re
 
 CHAPS:
-  - article.re
+  - building-environmen.re
+  - first-step.re
+  - pipeline.re
+  - post-method.re
+  - javascript.re
 
 APPENDIX:
 
