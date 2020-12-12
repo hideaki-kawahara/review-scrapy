@@ -26,12 +26,12 @@ WSL2を利用しているときは、Gitが入っていないのでGitも合わ�
 == 環境を作る
 ソースコードを置くところを作成してから仮想環境の構築を行います。
 //list[venv][仮想環境構築][bash]{
-git clone git@github.com:hideaki-kawahara/scrapy-source.git
-cd scrapy-source
+mkdir -p scrapy-source
 python -m venv .venv
 //}
 
-環境を切り替えます。
+仮想環境の作成ができたら環境を切り替えます。
+
 macOSやWSL2では、以下の方法で切り替えます。
 //list[mac][環境切り替え][bash]{
 source .venv/bin/activate
@@ -57,3 +57,10 @@ pip install scrapy
 
 これで環境ができました。あとは好きなエディターで読み込ませれば完了です。
 
+なお、筆者作成のソースを利用するときはソースをCloneするので下のようにします。
+//list[clone venv][仮想環境構築][bash]{
+git clone git@github.com:hideaki-kawahara/scrapy-source.git
+cd scrapy-source
+python -m venv .venv
+source .venv/bin/activate
+//}
