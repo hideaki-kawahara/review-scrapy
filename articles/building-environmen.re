@@ -26,7 +26,8 @@ WSL2を利用しているときは、Gitが入っていないのでGitも合わ�
 == 環境を作る
 ソースコードを置くところを作成してから仮想環境の構築を行います。
 //list[venv][仮想環境構築][bash]{
-mkdir scrapy-sample-source
+git clone git@github.com:hideaki-kawahara/scrapy-source.git
+cd scrapy-source
 python -m venv .venv
 //}
 
