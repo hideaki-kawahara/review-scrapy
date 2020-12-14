@@ -4,6 +4,7 @@
 ヤフーをスクレイピングしてみます。
 
 
+== プロジェクトの作成
 まずはプロジェクトを作成します。下のコマンドを実行するとyahoo_news_scrapyというディレクトリーが作成されます。
 
 //list[startproject][Projectの作成][bash]{
@@ -20,6 +21,7 @@ cd yahoo_news_scrapy
 scrapy genspider yahoo_news news.yahoo.co.jp
 //}
 
+== アイテム設定
 Spiderの雛形が作られたら、下の階層にあるitems.pyを編集します。これはSpiderが出力するアイテムを設定します。
 
 下のようにYahooNewsScrapyItemのところを編集します。
@@ -33,6 +35,7 @@ class YahooNewsScrapyItem(scrapy.Item):
     title = scrapy.Field()
 //}
 
+== Spider作成
 アイテム設定が終わったら、下の階層にあるSpiderである、yahoo_news.pyを編集します。
 
 編集内容は下のとおりになります。
@@ -64,6 +67,7 @@ class YahooNewsSpider(scrapy.Spider):
             )
 //}
 
+== クローラーの実行
 Spiderを作成したら、クローラーを実行します。 DEBUGのところでurlとtitleがピックアップされていることが確認できます。
 //list[crawl][クローラーの実行][bash]{
 scrapy crawl yahoo_news
