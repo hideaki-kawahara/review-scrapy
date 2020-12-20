@@ -101,17 +101,18 @@ start_urlsはスクレイピングするURLを配列で指定します。@<br>{}
 
 parse関数ではresponse変数を受け取り、ここにスクレイピングした情報などが入っています。@<br>{}
 
-@<code>{response.css}はセレクターになります。他にも@<code>{response.xpath}もセレクターで、どちらも情報を効率よく取得するための命令になります。
+@<code>{response.css}はセレクターになります。他にも@<code>{response.xpath}もセレクターがあり、どちらも情報を取得するための命令になります。
 
 今回の例ではニュース情報は、class指定されているnewsFeed_itemのliタグをすべて取得します。
 
-@<code>{response.css}で抽出されたのを順次@<code>{YahooNewsScrapyItem}に引き渡します。
+@<code>{response.css}で抽出されたのを順次@<code>{yield}命令を使用して@<code>{YahooNewsScrapyItem}の中ではurlとtitleの変数が指定されており、そこから順次データを引き渡します。@<br>{}
 
 @<code>{a.newsFeed_item_link::attr(href)}は、classに指定されているnewsFeed_item_linkのaタグを情報を取得します。そしてattr(href)が指定されているのでhrefの情報だけが取得できます。@<br>{}
 
 @<code>{div.newsFeed_item_title::text}、classに指定されているnewsFeed_item_titleのdivタグを情報を取得します。そしてtextが指定されているのでdivタグで囲われている情報だけが取得できます。@<br>{}
 
 @<code>{extract_first()}の指定がないときはcssのレスポンスが返るので指定することで文字列として取得します。
+
 
 == クローラーの実行
 Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでurlとtitleがピックアップされていることが確認できます。
