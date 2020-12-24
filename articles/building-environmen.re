@@ -64,3 +64,13 @@ cd scrapy-source
 python -m venv .venv
 source .venv/bin/activate
 //}
+
+== Docker
+この書籍ではDockerを使うことを前提で記載しています。
+Dockerの知識は必須ではないですが、Dockerのインストールと起動する知識があると良いです。
+
+次のようにコマンドラインを叩いて、dockerとdocker-composeのバージョンが出るようにDockerを準備してください。
+//list[docker][Dockerのバージョンについて][bash]{
+docker version
+docker-compose version
+//}
