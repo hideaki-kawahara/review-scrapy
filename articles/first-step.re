@@ -22,7 +22,7 @@ scrapy genspider yahoo_news news.yahoo.co.jp
 //}
 
 == アイテム設定
-Spiderの雛形が作られたらitems.pyを編集します。ファイルがある場所は@<code>{scrapy-source/yahoo_news_scrapy/items.py}です。
+Spiderの雛形が作られたらitems.pyを編集します。ファイルがある場所は@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/items.py}です。
 
 こちらはSpiderが出力するアイテムを設定するところになります。下のようにYahooNewsScrapyItemのところを編集します。
 
@@ -40,7 +40,7 @@ class YahooNewsScrapyItem(scrapy.Item):
 == キャッシュの設定
 
 キャッシュの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
-ファイルがある場所は@<code>{scrapy-source/yahoo_news_scrapy/settings.py}です。
+ファイルがある場所は@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
 
 下のようにHTTPCACHE_ENABLEDのところからコメントアウトされているので、コメントアウトを解除するように編集します。
 
@@ -58,16 +58,17 @@ HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 == Spider作成
 Spiderであるyahoo_news.pyを編集します。
-ファイルがある場所は@<code>{scrapy-source/yahoo_news_scrapy/spiders/yahoo_news.py}です。
+ファイルがある場所は@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/spiders/yahoo_news.py}です。
 
 編集内容は下のとおりになります。
 
  1. 上で作成したitems.pyをimportします。
- 2. start_urlsを取得したいURLに変更します。@<href>{https://news.yahoo.co.jp/topics/it, https://news.yahoo.co.jp/topics/it}に変更します。
+ 2. start_urlsを取得したいURLに変更します。@<href>{https://news.yahoo.co.jp/topics/business, https://news.yahoo.co.jp/topics/business}に変更します。
  3. liタグにニュース記事の一覧が入っているので、response.css('li.newsFeed_item')でピックアップしてfor文で回します。
  4. 記事をピックアップしてyieldを使用してitemsに出力します。
  5. urlはitems.css('a.newsFeed_item_link::attr(href)')にあるので、extract_firstでピックアップします。
  6. titleはitems.css('div.newsFeed_item_title::text')にあるので、でピックアップします。
+ 7. すべてをピックアップできたらページ遷移をするので、liタグにあるクラスpagination_item-nextにあるaタグをピックアップし、URLを補完して再帰呼び出しを行います。
 
 できたものは下のようになります。
 
@@ -79,7 +80,7 @@ from yahoo_news_scrapy.items import YahooNewsScrapyItem
 class YahooNewsSpider(scrapy.Spider):
     name = 'yahoo_news'
     allowed_domains = ['news.yahoo.co.jp']
-    start_urls = ['https://news.yahoo.co.jp/topics/it']
+    start_urls = ['https://news.yahoo.co.jp/topics/business']
 
     def parse(self, response):
         for items in response.css('li.newsFeed_item'):
@@ -87,6 +88,11 @@ class YahooNewsSpider(scrapy.Spider):
                 url=items.css('a.newsFeed_item_link::attr(href)')@<br>{}.extract_first(),
                 title=items.css('div.newsFeed_item_title::text')@<br>{}.extract_first()
             )
+
+        next_link = response.css('li.pagination_item-next a::attr(href)')@<br>{}.extract_first()
+        if next_link is None:
+            return
+        yield scrapy.Request(response.urljoin(next_link)@<br>{}, callback=self.parse)
 //}
 
 === 解説
@@ -113,9 +119,33 @@ parse関数ではresponse変数を受け取り、ここにスクレイピング�
 
 @<code>{extract_first()}の指定がないときはcssのレスポンスが返るので指定することで文字列として取得します。
 
+すべてをピックアップしたら、次ページに遷移するので、@<code>{li.pagination_item-next a::attr(href)}は、classに指定されているpagination_item-nextのaタグを情報を取得します。そしてattr(href)が指定されているのでhrefの情報だけが取得できます。@<br>{}
+
+@<code>{response.urljoin}にてhrefの情報を絶対Pathに変換し、再帰呼び出しで次のページへ遷移します。@<br>{}
 
 == クローラーの実行
 Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでurlとtitleがピックアップされていることが確認できます。
 //list[crawl][クローラーの実行][bash]{
 scrapy crawl yahoo_news
 //}
+
+csv形式で出力も可能です。
+//list[crawl_csv][クローラーの実行、CSVで出力][bash]{
+scrapy crawl yahoo_news -o yahoo_news.csv
+//}
+
+指定可能な拡張子は下の通りで、拡張子を指定することでファイル形式を指定します。
+
+ * csv
+ * json
+ * jsonlines
+ * jl
+ * marshal
+ * pickle
+ * xml
+
+
+拡張子をjsonにするとjson形式に、jsonlinesにすると見やすいjson形式になります。
+
+他にもJuliaで使用するjl形式や、PythonやRubyのオブジェクトのシリアライズで使うmarshal形式やpickle形式、Javaで有名になったxml形式があります。
+プラグインを開発すれば、自分で好きな出力形式を作ることも可能です。
