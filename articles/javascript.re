@@ -1,20 +1,29 @@
+= 動的画面のスクレイピング
 
-= 環境構築
+Qiitaのトレンドをスクレイピングして分析してみます。
+
+データベースに情報を格納して分析することで言語やフレームワークなどのトレンドが日によって変化することが見えてきます。なお、今回はデータベースに情報を格納するところまでとします。
+
+対象サイトは「Scrapbox」でログイン無しにてアクセスできるページです。
+
+URL:@<href>{https://scrapbox.io/product, https://scrapbox.io/product}@<br>{}
+
+5段階評価で難易度を記載します。Scrapboxの難易度は4つです。
+
+難易度：★★★★
 
 
 == JavaScriptレンダリングの導入
-ローカル環境で動かしますが、ORM（オブジェクト関係マッピング、Object-Relational Mapping）を使用してデータベースにアクセスします。
-
-今回はORMとしてSplashを利用します。環境構築@<chap>{building-environmen}をしたあとにSqlalchemyをインストールします。
+今回はJavaScriptレンダリングとしてSplashを利用します。環境構築@<chap>{building-environmen}をしたあとにScrapy splashをインストールします。
 //list[scrapy-splash][Splashの用意][bash]{
 pip install scrapy-splash
 //}
 
 
 == Splashの準備
-SplashをDockerで準備します。
+JavaScriptレンダリングとしてSplashをDockerで準備します。
 
-Dockerの入れ方は、この書籍では記載しませんが、dockerとdocker-composeを事前にインストールしておきます。@<br>{}
+Dockerの入れ方は、この書籍では記載しませんが、dockerとdocker-composeを事前にインストールしておきます。
 
 Docker用のディレクトリーを作成します。
 //list[docker][Docker用ディレクトリー作成][bash]{
@@ -41,13 +50,16 @@ Dockerコンテナーを起動します。
 docker-compose up -d
 //}
 
+ブラウザを起動して@<href>{http://localhost:8050, http://localhost:8050}につなげると、JavaScriptレンダリングであるSplashのGUIにアクセスできます。
+
+//indepimage[Splash][SplashのGUI]
 
 == プロジェクトの作成
-次にプロジェクトを作成します。Dockerディレクトーから上の階層に戻り、下のコマンドを実行するとqiita_trend_scrapyというディレクトリーが作成されます。
+次にプロジェクトを作成します。Dockerディレクトーから上の階層に戻り、下のコマンドを実行するとscrapbox_scrapyというディレクトリーが作成されます。
 
 //list[startproject][Projectの作成][bash]{
 cd ..
-scrapy startproject techbookfest_scrapy
+scrapy startproject scrapbox_scrapy
 //}
 
 ここで作成されるのはScrapyの雛形だけで、Spiderの雛形は作られていません。
@@ -56,88 +68,61 @@ scrapy startproject techbookfest_scrapy
 
 
 //list[genspider][Spiderの作成][bash]{
-cd techbookfest_scrapy
-scrapy genspider techbookfest_url techbookfest.org
+cd scrapbox_scrapy
+scrapy genspider scrapbox_url scrapbox.io
 //}
 
 
 == アイテム設定
-Spiderの雛形が作られたらitems.pyを編集します。
+Spiderの雛形が作られたらitems.pyを編集します。編集するファイルは@<code>{scrapbox_scrapy/scrapbox_scrapy/items.py}です。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。
-
-こちらはSpiderが出力するアイテムを設定するところになります。下のようにQiitaTrendScrapyItemのところを編集します。
+こちらはSpiderが出力するアイテムを設定するところになります。下のようにScrapboxScrapyItemのところを編集します。
 
 //list[item][編集後のitems.py][python]{
 import scrapy
 
 
-class TechbookfestScrapyItem(scrapy.Item):
+class ScrapboxScrapyItem(scrapy.Item):
     title = scrapy.Field()
-    digital = scrapy.Field()
-    paper = scrapy.Field()
     url = scrapy.Field()
 //}
 
-次はディレイタイムの設定をします。
+次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
 
-== ディレイタイムの設定
-ディレイタイムの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
-
-下のようにDOWNLOAD_DELAYがコメントアウトされているので、コメントアウトを解除するように編集します。
+次はJavaScriptレンダリング用の設定をします。
 
 
-//list[DOWNLOAD_DELAY][キャッシュの設定][python]{
-DOWNLOAD_DELAY = 3
-//}
+== JavaScriptレンダリング用の設定
+Splashを利用するためには下の設定します。編集するファイルは@<code>{scrapbox_scrapy/scrapbox_scrapy/items.py}です。
 
-次はキャッシュの設定をします。
+ * Spider Middleware
+ * Download Middleware
+ * Splash entry URL
+ * Splash用DupeFilter
+ * Splash用HTTP Cache
 
-== キャッシュの設定
-キャッシュの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
+Spider Middlewareのところがコメントアウトされているので、コメントアウトを解除するように編集します。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
-
-下のようにHTTPCACHE_ENABLEDのところからコメントアウトされているので、コメントアウトを解除するように編集します。
-
-//list[HTTPCACHE][キャッシュの設定][python]{
-HTTPCACHE_ENABLED = True
-HTTPCACHE_EXPIRATION_SECS = 0
-HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = []
-HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-//}
-
-次はDownload Middlewareの設定をします。
-
-
-
-
-
-== Download Middlewareの設定
-Splashを利用するためにはDownload Middlewareの設定します。
-
-
+//list[SPIDER_MIDDLEWARES][Spider Middlewareの設定][python]{
 SPIDER_MIDDLEWARES = {
    'techbookfest_scrapy.middlewares.TechbookfestScrapySpiderMiddleware': 543,
 }
+//}
 
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
+Download Middlewareのところからコメントアウトされているので、コメントアウトを解除するように編集します。数値はSplashのMiddlewareが標準のDownload Middlewareより優先させたいので750以下になるように設定します。
 
-下のようにDOWNLOADER_MIDDLEWARESのところからコメントアウトされているので、コメントアウトを解除するように編集し、scrapy_splashの部分を追記します。DOWNLOADER_MIDDLEWARESの値が750なので、scrapy_splashは少し小さい値に設定します。
-
-そして、その下にJavaScriptレンダリングが起動しているURLを@<code>{SPLASH_URL = 'http://localhost:8050/'}指定します。
-
-
-//list[DOWNLOADER_MIDDLEWARES][pipelineの設定][python]{
+//list[DOWNLOADER_MIDDLEWARES][Download Middlewareの設定][python]{
 DOWNLOADER_MIDDLEWARES = {
     'scrapy_splash.SplashCookiesMiddleware': 723,
     'scrapy_splash.SplashMiddleware': 725,
     'techbookfest_scrapy.middlewares.TechbookfestScrapyDownloaderMiddleware': 810,
 }
+//}
+
+Splash entry URL、Splash用DupeFilter、Splash用HTTP Cacheについては記載が存在しないので下のように追記します。DupeFilterとHTTP Cacheを設定しないと、キャッシュをうまくできなくなるので必ず設定してください。
+
+//list[ETC][各種追記内容][python]{
 SPLASH_URL = 'http://localhost:8050/'
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
@@ -147,19 +132,9 @@ HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 次はSpiderを作成します。
 
 == Spider作成
-Spiderであるqiita_trend.pyを編集します。
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/spiders/qiita_trend.py}です。
-
-編集内容は下のとおりになります。
-
- 1. 上で作成したitems.pyをimportします。
- 2. Qiitaタグはaタグのcss-4czcteのclassに入っているので、response.css('a.css-4czcte')でピックアップしてfor文で回します。
- 3. Qiitaタグをカウントするので、Dictを使いカウントします。
- 4. カウントが終わったらアイテムとして出力します。
+Spiderであるscrapbox_url.pyを編集します。編集するファイルは@<code>{scrapbox_scrapy/scrapbox_scrapy/spiders/scrapbox_url.py}です。
 
 できたものは下のようになります。
-
-https://scrapbox.io/wakaba-manga/
 
 //list[QiitaTrendSpider][Spiderの編集][python]{
 import scrapy
@@ -171,6 +146,7 @@ function main(splash)
     splash.private_mode_enabled = false
     splash:go(splash.args.url)
     splash:wait(1)
+    splash.private_mode_enabled = true
     html = splash:html()
     return html
 end
@@ -200,72 +176,124 @@ class ScrapboxUrlSpider(scrapy.Spider):
             for hrefs in uls.css('a'):
                 yield ScrapboxScrapyItem(
                     title = hrefs.css('a::text').extract_first(),
-                    url = response.urljoin(hrefs.css('a::attr(href)').extract_first())
+                    url = response.urljoin(hrefs.css('a::attr(href)')
+                    .extract_first())
                 )
+
 //}
 
-次はPipelineを作成します。
+=== 解説
+Spiderのソースコードを解説します。
 
-== Pipeline
-Pipelineでは受け取ったitemに対して処理をします。
+他の章と同じようにスクレイピングします。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/pipeline.py}です。
-
-Tagテーブル情報のインスタンスを用意し、@<code>{session.add}でレコードを追加して@<code>{session.commit}すると、データベースに記録されていきます。
-
-
-//list[QiitaTrendScrapyPipeline][Pipelineの編集][python]{
-from itemadapter import ItemAdapter
-from . database import session ,Base
-from . tag import Tag
-
-
-class QiitaTrendScrapyPipeline:
-    def process_item(self, item, spider):
-        tags = Tag()
-        tags.keyword = item['keyword']
-        tags.count = item['count']
-
-        session.add(tags)
-        session.commit()
-
-
-        return item
+//emlist[][python]{
+from scrapbox_scrapy.items import ScrapboxScrapyItem
 //}
+上で作成したitems.pyをimportしています。
+
+//emlist[][python]{
+name = 'scrapbox_url'
+//}
+nameはSpiderの名前でクロールするときに指定する名前です。
+
+
+//emlist[][python]{
+LUA_SCRIPT = """
+function main(splash)
+    splash.private_mode_enabled = false
+    splash:go(splash.args.url)
+    splash:wait(1)
+    html = splash:html()
+    splash.private_mode_enabled = true
+    return html
+end
+"""
+//}
+SplashのLua scriptと呼ばれるJavaScriptを記述します。今回のサイトはプライベートモードだと正しくJavaScriptが動作しないので、Lua scriptを使い一度プライベートモードをオフにしてからJavaScriptレンダリングを行います。
+
+Dockerで最初からプライベートモードをオフにして起動も可能ですが、安全な運用としてはLua scriptにてモード切替をするようにしました。
+
+//emlist[][python]{
+allowed_domains = ['scrapbox.io']
+//}
+allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
+
+//emlist[][python]{
+start_urls = ''
+//}
+start_urlsは空文字にし、コマンドラインのパラメーターで引き渡します。
+
+//emlist[][python]{
+def start_requests(self):
+    if self.start_url != '':
+        yield scrapy_splash.SplashRequest(
+            self.start_url,
+            self.parse,
+            endpoint='execute',
+            args={'lua_source': LUA_SCRIPT},
+        )
+//}
+
+start_requestsを指定しないと、Scrapyはstart_urlに指定されたURLに対してGETメソッドでアクセスします。今回はJavaScriptレンダリングを指定したいので、start_requests用意しSplashRequestでアクセスするようにします。
+
+@<code>{endpoint='execute'}はJavaScriptレンダリングに対してやり取りをするファイルとなり、そこへ@<code>{args={'lua_source': LUA_SCRIPT}}にてLua scriptを実行させます。
+
+
+//emlist[][python]{
+for uls in response.css('ul.page-list'):
+    for hrefs in uls.css('a'):
+        yield ScrapboxScrapyItem(
+            title = hrefs.css('a::text').extract_first(),
+            url = response.urljoin(hrefs.css('a::attr(href)')
+            .extract_first())
+        )
+//}
+
+
+
+ulタグのclass指定されているpage-listにページ情報があるので、その中にあるaタグの情報を取得します。@<code>{response.css('ul.page-list')}でピックアップしてfor文で回して取得します。
 
 
 == クローラーの実行
-Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGメッセージにSqlalchemyの実行結果が表示されていることが確認できます。
+Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでurlとtitleがピックアップされていることが確認できます。
+
+なお、今回ログインしないでも見ることができるページを参考例として記載ます。
+
+URL:@<href>{https://scrapbox.io/wakaba-manga/, https://scrapbox.io/wakaba-manga/}
 //list[crawl][クローラーの実行][bash]{
-scrapy crawl qiita_trend
+scrapy crawl scrapbox_url -a start_url=https://scrapbox.io/wakaba-manga/
 //}
 
-== データベースの確認
-実行が終わったらデータの確認をします。データベースに入って確認します。
+== ソースコードについて
+この章で使用したソースコードはGitHubにあります。
 
-Dockerに入り、SQLを叩きます。
+@<href>{https://github.com/hideaki-kawahara/scrapy-source/tree/chapter4, https://github.com/hideaki-kawahara/scrapy-source/tree/chapter4}
 
-//list[result][データベース登録確認][bash]{
-docker exec -i -t scrapy_postgres bash
-su postgres
-psql
-select * from tags order by count desc;
-//}
+実行する手順を下に記載します。
 
-下のように表示されたら正しく実行されています。
-//indepimage[result2]
+ 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+   @<code>{mkdir -p scrapy-source}
+ 2. Cloneする。@<br>{}
+   @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
+ 3. chapter4をcheckoutする。@<br>{}
+   @<code>{git checkout chapter4}
+ 4. 仮想環境を作成する。@<br>{}
+   @<code>{python -m venv .venv}
+ 5. 仮想環境に入る。@<br>{}
+   @<code>{source .venv/bin/activate}
+ 6. ライブラリーをインストールする。@<br>{}
+   @<code>{pip install -r requirements.txt}
+ 7. Dockerディレクトリーに入る。
+   @<code>{cd docker}
+ 8. Dockerを起動する。
+   @<code>{docker-compose up -d}
+ 9. 該当のディレクトーに入る。@<br>{}
+   @<code>{cd ../scrapbox_scrapy}
+ 10. 実行する。@<br>{}
+   @<code>{scrapy crawl scrapbox_url}
 
+※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter4のディレクトリーは消えません。気になるようなら削除してください。
 
-確認が終わり、データベースを落とすときは下のコマンドを叩きます。
-
-//list[docker down][Dockerの落とし方][bash]{
-cd docker
-docker-compose down
-//}
-
-
-
-
-
-
+@<code>{rm -rf scrapbox_scrapy}
 
