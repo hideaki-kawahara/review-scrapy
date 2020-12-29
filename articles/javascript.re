@@ -190,8 +190,11 @@ Spiderのソースコードを解説します。
 他の章と同じようにスクレイピングします。
 
 //emlist[][python]{
+import scrapy_splash
 from scrapbox_scrapy.items import ScrapboxScrapyItem
 //}
+scrapy_splashをimportしてます。
+
 上で作成したitems.pyをimportしています。
 
 //emlist[][python]{
