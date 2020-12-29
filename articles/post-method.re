@@ -1,19 +1,20 @@
-
 = POSTメソッドがあるサイトでスクレイピング
-この章では、POSTメソッドで画面遷移をしているサイトでスクレイピングする方法を紹介します。
+この章では、POSTメソッドで画面遷移をしているサイトでスクレイピングする方法を紹介します。@<br>{}
 
-POSTメソッドは投稿フォームの完了画面やショッピングカートのような、URLをブックマークされると少々困るところで使用することが多く、単なる画面の切り替えやページネーションの画面遷移などでは使われなくなりました。
+POSTメソッドは投稿フォームの完了画面やショッピングカートのような、URLをブックマークされると少々困るところで使用することが多く、単なる画面の切り替えやページネーションの画面遷移などでは使われなくなりました。@<br>{}
 
-2010年ごろは、何でもPOSTメソッドで画面遷移するサイトが存在しました。Strutsフレームワークが代表的で、2020年も政府系のサイトでは非常に多く使われおり、Struts2の脆弱性問題で少し減りましたが、システム移行をしてないところが残っております。また、これらのサイトはスマートフォンに対応しておらず、文字コードもShiftJISで表示されていることが多いです。
-
-
-それでは、POSTメソッドでスクレイピングするには、どうすれば良いのでしょうか？実際にやってみましょう。
+2010年ごろは、何でもPOSTメソッドで画面遷移するサイトが存在しました。Strutsフレームワークが代表的で、2020年も政府系のサイトでは非常に多く使われおり、Struts2の脆弱性問題で少し減りましたが、システム移行をしてないところが残っております。また、これらのサイトはスマートフォンに対応しておらず、文字コードもShiftJISで表示されていることが多いです。@<br>{}
 
 
-あわせて、この章ではクローリングするときにパラメーターを指定して、スクレイピングする情報を変化させてみます。
+あわせて、この章ではクローリングするときにパラメーターを指定して、スクレイピングする情報を変化させてみます。@<br>{}
 
-対象サイトは「国土交通省の賃貸住宅管理業者」URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}です。
+対象サイトは「国土交通省の賃貸住宅管理業者」です。
 
+URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}です。@<br>{}
+
+5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は1つです。
+
+難易度：★
 
 == プロジェクトの作成
 まずはプロジェクトを作成します。下のコマンドを実行するとmlit_scrapyというディレクトリーが作成されます。
@@ -35,7 +36,8 @@ scrapy genspider etsuran_mlit etsuran.mlit.go.jp
 
 
 == アイテム設定
-Spiderの雛形が作られたらitems.pyを編集します。ファイルがある場所は@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/items.py}です。
+Spiderの雛形が作られたらitems.pyを編集します。設定するファイルは@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/items.py}です。
+
 
 こちらはSpiderが出力するアイテムを設定するところになります。下のようにMlitScrapyItemのところを編集します。
 
@@ -49,44 +51,13 @@ class MlitScrapyItem(scrapy.Item):
     address = scrapy.Field()
 //}
 
-次はキャッシュの設定をします。
-
-== キャッシュの設定
-
-キャッシュの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
-ファイルがある場所は@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/settings.py}です。
-
-下のようにHTTPCACHE_ENABLEDのところからコメントアウトされているので、コメントアウトを解除するように編集します。
-
-//list[HTTPCACHE][キャッシュの設定][python]{
-HTTPCACHE_ENABLED = True
-HTTPCACHE_EXPIRATION_SECS = 0
-HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = []
-HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-//}
-
+ディレイタイムの設定とキャッシュの設定は、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
 
 次はSpiderを作成します。
 
 
 == Spider作成
-Spiderであるetsuran_mlit.pyを編集します。
-ファイルがある場所は@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/spiders/etsuran_mlit.py}です。
-
-編集内容は下のとおりになります。
-
- 1. 上で作成したitems.pyをimportします。@<code>{from mlit_scrapy.items import MlitScrapyItem}
- 2. start_urlsを取得したいURLに変更します。@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}に変更します。
- 3. デフォルトの都道府県を設定しておきます。@<code>{pref = '11'}
- 4. __init__関数を定義します。
- 5. 最初の検索を行う@<code>{scrapy.FormRequest.from_response}でPOST Methodを記載します。
- 7. trタグに情報一覧が入っているので、response.css('tr')でピックアップしてfor文で回します。
- 8. enumerateとfor文で、tdタグの内容をextract_firstでピックアップし、配列に入れます。
- 9. licenceは配列1番目にあるので、itemに出力します。
- 10. companyは配列2番目にあるので、itemに出力します。
- 11. addressは配列5番目にあるので、itemに出力します。
- 12. すべてをピックアップできたらページ遷移をするので、imgタグにonclick属性が登場するので登場したら、フォームデータのCMDにnextを設定して、POST Methodを実行し、@<code>{after_parse}関数をコールバックします。
+Spiderであるetsuran_mlit.pyを編集します。編集するファイルは@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/spiders/etsuran_mlit.py}です。
 
 できたものは下のようになります。
 
@@ -101,14 +72,15 @@ class EtsuranMlitSpider(scrapy.Spider):
     start_urls = ['https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do']
     pref = '11'
 
-    def __init__(self, pref='11', *args, **kwargs):
+    def __init__(self, pref = '11', *args, **kwargs):
         super(EtsuranMlitSpider, self).__init__(*args, **kwargs)
         self.pref = pref
 
     def parse(self, response):
         return scrapy.FormRequest.from_response(
                     response,
-                    formdata = dict( kenCode = self.pref, sortValue = '1', choice = '1'
+                    formdata = dict(kenCode = self.pref
+                    ,sortValue = '1', choice = '1'
                     ,dispCount = '50' ,CMD = 'search'),
                     callback = self.after_parse
                 )
@@ -132,30 +104,126 @@ class EtsuranMlitSpider(scrapy.Spider):
 
         yield scrapy.FormRequest.from_response(
                     response,
-                    formdata = dict( kenCode = self.pref, sortValue = '1', choice = '1'
+                    formdata = dict(kenCode = self.pref
+                    ,sortValue = '1', choice = '1'
                     ,dispCount = '50' ,CMD = 'next'),
                     callback = self.after_parse
                 )
 //}
 
 === 解説
+Spiderのソースコードを解説します。
 
-ここでの肝は@<code>{scrapy.FormRequest.from_response}です。
+前の章と同じようにスクレイピングしていいますが、この章での肝は@<code>{scrapy.FormRequest.from_response}で、この命令を使いPOSTメソッドでリクエストします。
 
+//emlist[][python]{
+from mlit_scrapy.items import MlitScrapyItem
+//}
+上で作成したitems.pyをimportしています。
+
+//emlist[][python]{
+name = 'etsuran_mlit'
+//}
+nameはSpiderの名前でクロールするときに指定する名前です。
+
+//emlist[][python]{
+allowed_domains = ['etsuran.mlit.go.jp']
+//}
+allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
+
+//emlist[][python]{
+start_urls = ['https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do']
+pref = '11'
+//}
+start_urlsはスクレイピングするURLを配列で指定します。デフォルトではstart_urlsで指定されたURLをスクレイピングしてparse関数に引き渡します。
+prefは下で使用するデフォルトの地域を設定しています。
+
+//emlist[][python]{
+def __init__(self, pref = '11', *args, **kwargs):
+    super(EtsuranMlitSpider, self).__init__(*args, **kwargs)
+    self.pref = pref
+//}
+@<code>{-a pref=11}と起動オプションを指定するときに取得する決まった書き方です。取得したパラメーターを他の関数で使用するのでインスタンス変数に代入しています。
+
+
+//emlist[][python]{
+return scrapy.FormRequest.from_response(
+            response,
+            formdata = dict(kenCode = self.pref
+            ,sortValue = '1', choice = '1'
+            ,dispCount = '50' ,CMD = 'search'),
+            callback = self.after_parse
+        )
+//}
+
+parse関数ではresponse変数を受け取りスクレイピングしたい情報などが入っていますが、POSTメソッドでアクセスするため使用のみで、@<code>{from_response}を発行します。
+
+POSTするためのデータは@<code>{formdata}で辞書形式にて作成します。このサイトではサーチ結果画面はCMDにsearchを入れると動作します。他にも必要な情報を入れておきます。
+
+
+//emlist[][python]{
+items = [''] * 6
+for index, td in enumerate(tr.css('td')):
+    items[ index ] = td.css('::text').extract_first()
+//}
+スクレイピングしたい情報はテーブルタグの中に入っているのですが、登録番号（licence）以外はclassを設定していないので@<code>{enumerate}を使用して配列に入れておくとあとで処理がしやすいです。あとは欲しい配列インデックスを指定してデータを引き引き渡します。
+
+
+//emlist[][python]{
+next_page = response.css('img[src="/TAKKEN/images/result_move_r.jpg"]::attr(onclick)').extract_first()
+if next_page == '':
+    return
+
+yield scrapy.FormRequest.from_response(
+            response,
+            formdata = dict(kenCode = self.pref
+            ,sortValue = '1', choice = '1'
+            ,dispCount = '50' ,CMD = 'next'),
+            callback = self.after_parse
+        )
+//}
+
+すべてをピックアップしたら、次ページに遷移するので、次のページのリンク情報を取得します。
+
+次ページを示すimgタグにonclick属性が設定されるので確認できたら、CMDにnextを設定して次ページへ遷移するというフォームデータを作成し、再帰呼び出しでPOSTメソッドを発行して次のページへ遷移します。
 
 
 == クローラーの実行
-Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでurlとtitleがピックアップされていることが確認できます。
+Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでaddressとtitleがピックアップされていることが確認できます。
 //list[crawl][クローラーの実行][bash]{
-scrapy crawl yahoo_news
+scrapy crawl etsuran_mlit
+//}
+
+Spiderに渡すパラメーターは@<code>{-a}で指定します。東京都は@<code>{-a pref=13}と指定します。10以下の道県は0を加えて指定します。
+//list[crawl_option][クローラーを実行するときのオプション指定][bash]{
+scrapy crawl etsuran_mlit -a pref=13
+scrapy crawl etsuran_mlit -a pref=01
 //}
 
 == ソースコードについて
-この章で使用したソースコードはGitHubにあります。@<href>{https://github.com/hideaki-kawahara/scrapy-source/tree/chapter2, https://github.com/hideaki-kawahara/scrapy-source/tree/chapter2}
+この章で使用したソースコードはGitHubにあります。
 
- 1. Cloneする。
- 2. chapter1をcheckoutする。
- 2. 仮想環境を作成し、仮想環境に入る。
- 3. ライブラリーをインストールする。@<code>{pip install -r requirements.txt}
- 4. 該当のディレクトーに入る。
- 5. 実行する。@<code>{scrapy crawl yahoo_news}
+@<href>{https://github.com/hideaki-kawahara/scrapy-source/tree/chapter2, https://github.com/hideaki-kawahara/scrapy-source/tree/chapter2}
+
+実行する手順を下に記載します。
+
+ 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+   @<code>{mkdir -p scrapy-source}
+ 2. Cloneする。@<br>{}
+   @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
+ 3. chapter2をcheckoutする。@<br>{}
+   @<code>{git checkout chapter2}
+ 4. 仮想環境を作成する。@<br>{}
+   @<code>{python -m venv .venv}
+ 5. 仮想環境に入る。@<br>{}
+   @<code>{source .venv/bin/activate}
+ 6. ライブラリーをインストールする。@<br>{}
+   @<code>{pip install -r requirements.txt}
+ 7. 該当のディレクトーに入る。@<br>{}
+   @<code>{cd mlit_scrapy}
+ 8. 実行する。@<br>{}
+   @<code>{scrapy crawl etsuran_mlit}
+
+※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter2のディレクトリーは消えません。気になるようなら削除してください。
+
+@<code>{rm -rf mlit_scrapy}
