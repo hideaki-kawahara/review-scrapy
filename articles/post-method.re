@@ -115,7 +115,7 @@ class EtsuranMlitSpider(scrapy.Spider):
 === 解説
 Spiderのソースコードを解説します。
 
-前の章と同じようにスクレイピングしていますが、この章での肝は@<code>{scrapy.FormRequest.from_response}で、この命令を使いPOSTメソッドでリクエストします。
+前の章と同じようにスクレイピングしますが、この章での肝は@<code>{scrapy.FormRequest.from_response}で、この命令を使いPOSTメソッドでリクエストします。
 
 //emlist[][python]{
 from mlit_scrapy.items import MlitScrapyItem
