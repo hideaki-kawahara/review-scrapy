@@ -198,12 +198,6 @@ scrapy_splashをimportしてます。
 上で作成したitems.pyをimportしています。
 
 //emlist[][python]{
-name = 'scrapbox_url'
-//}
-nameはSpiderの名前でクロールするときに指定する名前です。
-
-
-//emlist[][python]{
 LUA_SCRIPT = """
 function main(splash)
     splash.private_mode_enabled = false
@@ -223,6 +217,11 @@ Website is not rendered correctly
 @<href>{https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly, https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly}
 
 Dockerで最初からプライベートモードをオフにして起動も可能ですが、安全な運用としてはLua scriptにてモード切替をするようにしました。
+
+//emlist[][python]{
+name = 'scrapbox_url'
+//}
+nameはSpiderの名前でクロールするときに指定する名前です。
 
 //emlist[][python]{
 allowed_domains = ['scrapbox.io']
