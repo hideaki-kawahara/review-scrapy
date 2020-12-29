@@ -260,6 +260,8 @@ Spiderを作成し各種設定をしたら、クローラーを実行します�
 
 なお、今回ログインしないでも見ることができるページを参考例として記載します。
 
+マンガでわかるScrapbox
+
 URL:@<href>{https://scrapbox.io/wakaba-manga/, https://scrapbox.io/wakaba-manga/}
 //list[crawl][クローラーの実行][bash]{
 scrapy crawl scrapbox_url -a start_url=https://scrapbox.io/wakaba-manga/
