@@ -4,9 +4,10 @@ PREDEF:
 CHAPS:
   - building-environmen.re
   - first-step.re
-  - pipeline.re
   - post-method.re
+  - pipeline.re
   - javascript.re
+  - Lazy-Load.re
 
 APPENDIX:
 
