@@ -102,6 +102,7 @@ Splashを利用するためには下の設定します。編集するファイ�
  * Splash entry URL
  * Splash用DupeFilter
  * Splash用HTTP Cache
+ * AutoThrottle
 
 Spider Middlewareのところがコメントアウトされているので、コメントアウトを解除するように編集します。
 
@@ -128,6 +129,14 @@ Splash entry URL、Splash用DupeFilter、Splash用HTTP Cacheについては記�
 SPLASH_URL = 'http://localhost:8050/'
 DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
 HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
+//}
+
+AutoThrottleのところがコメントアウトされているので、コメントアウトを解除するように編集します。ネットワークが遅くなるときにディレイを入れてくれる設定です。
+
+//list[AUTOTHROTTLE][AutoThrottleの設定][python]{
+AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_START_DELAY = 5
+AUTOTHROTTLE_MAX_DELAY = 60
 //}
 
 
