@@ -12,9 +12,9 @@ POSTメソッドは投稿フォームの完了画面やショッピングカー�
 
 URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}です。@<br>{}
 
-5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は1つです。
+5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は2つです。
 
-難易度：★
+難易度：★★
 
 == プロジェクトの作成
 まずはプロジェクトを作成します。下のコマンドを実行するとmlit_scrapyというディレクトリーが作成されます。
