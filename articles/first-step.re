@@ -3,7 +3,9 @@
 
 ヤフーニュースをスクレイピングしてみます。
 
-難易度：低
+5段階評価で難易度を記載します。ヤフーニュースの難易度は1つです。
+
+難易度：★
 
 == プロジェクトの作成
 まずはプロジェクトを作成します。下のコマンドを実行するとyahoo_news_scrapyというディレクトリーが作成されます。
@@ -90,14 +92,14 @@ class YahooNewsSpider(scrapy.Spider):
     def parse(self, response):
         for items in response.css('li.newsFeed_item'):
             yield YahooNewsScrapyItem(
-                url=items.css('a.newsFeed_item_link::attr(href)')@<br>{}.extract_first(),
-                title=items.css('div.newsFeed_item_title::text')@<br>{}.extract_first()
+                url = items.css('a.newsFeed_item_link::attr(href)').extract_first(),
+                title = items.css('div.newsFeed_item_title::text').extract_first()
             )
 
-        next_link = response.css('li.pagination_item-next a::attr(href)')@<br>{}.extract_first()
+        next_link = response.css('li.pagination_item-next a::attr(href)').extract_first()
         if next_link is None:
             return
-        yield scrapy.Request(response.urljoin(next_link)@<br>{}, callback=self.parse)
+        yield scrapy.Request(response.urljoin(next_link), callback=self.parse)
 //}
 
 === 解説
@@ -112,12 +114,12 @@ from yahoo_news_scrapy.items import YahooNewsScrapyItem
 上で作成したitems.pyをimportしています。
 
 //emlist[][python]{
-    name = 'yahoo_news'
+name = 'yahoo_news'
 //}
 nameはSpiderの名前でクロールするときに指定する名前です。
 
 //emlist[][python]{
-    allowed_domains = ['news.yahoo.co.jp']
+allowed_domains = ['news.yahoo.co.jp']
 //}
 allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
 
@@ -134,8 +136,8 @@ parse関数ではresponse変数を受け取り、ここにスクレイピング�
 //emlist[][python]{
 for items in response.css('li.newsFeed_item'):
     yield YahooNewsScrapyItem(
-        url=items.css('a.newsFeed_item_link::attr(href)').extract_first(),
-        title=items.css('div.newsFeed_item_title::text').extract_first()
+        url = items.css('a.newsFeed_item_link::attr(href)').extract_first(),
+        title = items.css('div.newsFeed_item_title::text').extract_first()
     )
 //}
 
@@ -208,4 +210,6 @@ scrapy crawl yahoo_news -o yahoo_news.csv
  8. 実行する。@<br>{}
    @<code>{scrapy crawl yahoo_news}
 
-※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter1のディレクトリーは消えません。気になるようなら削除してください。@<code>{rm -rf yahoo_news_scrapy}
+※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter1のディレクトリーは消えません。気になるようなら削除してください。
+
+@<code>{rm -rf yahoo_news_scrapy}
