@@ -1,8 +1,10 @@
 = 動的画面のスクレイピング
 
-Qiitaのトレンドをスクレイピングして分析してみます。
+動的画面をスクレイピングします。
 
-データベースに情報を格納して分析することで言語やフレームワークなどのトレンドが日によって変化することが見えてきます。なお、今回はデータベースに情報を格納するところまでとします。
+動的画面はJavaScriptが画面のレンダリングを完了したあとに、はじめて画面として表示されるため、HTMLを取得するだけではスクレイピングができません。この場合SeleniumやPuppeteerなどのヘッドレスブラウザでavaScriptレンダリングを行わせてからスクレイピングします。
+
+今回はJavaScriptレンダリングとしてSplashを利用します。
 
 対象サイトは「Scrapbox」でログイン無しにてアクセスできるページです。
 
@@ -14,7 +16,7 @@ URL:@<href>{https://scrapbox.io/product, https://scrapbox.io/product}@<br>{}
 
 
 == JavaScriptレンダリングの導入
-今回はJavaScriptレンダリングとしてSplashを利用します。環境構築@<chap>{building-environmen}をしたあとにScrapy splashをインストールします。
+環境構築@<chap>{building-environmen}をしたあとにScrapy splashをインストールします。
 //list[scrapy-splash][Splashの用意][bash]{
 pip install scrapy-splash
 //}
