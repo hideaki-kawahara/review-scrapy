@@ -3,6 +3,10 @@
 
 ヤフーニュースをスクレイピングしてみます。
 
+対象サイトは「ヤフーニュース」のビジネスページです。
+
+URL:@<href>{https://news.yahoo.co.jp/topics/business, https://news.yahoo.co.jp/topics/business}@<br>{}
+
 5段階評価で難易度を記載します。ヤフーニュースの難易度は1つです。
 
 難易度：★

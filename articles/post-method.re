@@ -10,7 +10,7 @@ POSTメソッドは投稿フォームの完了画面やショッピングカー�
 
 対象サイトは「国土交通省の賃貸住宅管理業者」です。
 
-URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}です。@<br>{}
+URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}@<br>{}
 
 5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は2つです。
 
