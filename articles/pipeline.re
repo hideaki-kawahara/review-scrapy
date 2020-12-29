@@ -359,9 +359,9 @@ docker-compose down
  9. 該当のディレクトーに入る。@<br>{}
    @<code>{cd ../qiita_trend_scrapy}
  10. 実行する。@<br>{}
-   @<code>{scrapy crawl etsuran_mlit}
+   @<code>{scrapy crawl qiita_trend}
 
-※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter2のディレクトリーは消えません。気になるようなら削除してください。
+※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter3のディレクトリーは消えません。気になるようなら削除してください。
 
-@<code>{rm -rf mlit_scrapy}
+@<code>{rm -rf qiita_trend_scrapy}
 
