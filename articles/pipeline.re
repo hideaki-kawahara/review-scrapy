@@ -1,14 +1,17 @@
-
-= PipelineとORM
+= データベースを使用する
 
 Qiitaのトレンドをスクレイピングして分析してみます。
 
-分析することで言語やフレームワークなどのトレンドが日によって変化することが見えてきます。
+データベースに情報を格納して分析することで言語やフレームワークなどのトレンドが日によって変化することが見えてきます。なお、今回はデータベースに情報を格納するところまでとします。
+
+5段階評価で難易度を記載します。Qiitaの難易度は1つですが、データベースを使用するので難易度は2つです。
+
+難易度：★★
 
 == ORMの導入
 ローカル環境で動かしますが、ORM（オブジェクト関係マッピング、Object-Relational Mapping）を使用してデータベースにアクセスします。
 
-今回はORMとしてSqlalchemyを利用します。環境構築@<chap>{building-environmen}をしたあとにSqlalchemyをインストールします。
+今回はORMとしてSqlalchemyを利用します。環境構築@<chap>{building-environmen}をしたあとにSqlalchemyとPostgreSQLを使用するのでpsycopg2をインストールします。
 //list[sqlalchemy][sqlalchemyの用意][bash]{
 pip install sqlalchemy
 pip install psycopg2
@@ -16,12 +19,9 @@ pip install psycopg2
 
 
 == データベースの準備
-次にデータベースを用意します。
-ローカル環境にデータベースを入れるか、Dockerでデータベースを入れてください。
+次にデータベースを用意します。ローカル環境にデータベースを入れるか、Dockerでデータベースを入れます。
 
-
-今回はDockerでデータベースを入れてみます。
-Dockerの入れ方は、この書籍では記載しませんが、dockerとdocker-composeを事前にインストールしておきます。@<br>{}
+今回はDockerでデータベースを入れてみます。Dockerの入れ方は、この書籍では記載しませんが、dockerとdocker-composeを事前にインストールしておきます。
 
 Docker用のディレクトリーを作成します。
 //list[docker][Docker用ディレクトリー作成][bash]{
@@ -29,9 +29,7 @@ mkdir -p docker
 cd docker
 //}
 
-Docker用ディレクトリーにdocker-compose.ymlファイルを作成します。
-
-今回はPostgreSQLを使います。
+Docker用ディレクトリーにdocker-compose.ymlファイルを作成します。今回はPostgreSQLを使います。
 
 //list[After][docker-compose.ymlファイルの内容][yml]{
 version: '3'
@@ -49,7 +47,8 @@ services:
       - 5432:5432
 //}
 
-次にデータベースの初期設定ファイルを作成します。
+データベースの初期設定ファイルを作成します。
+
 //list[initdb][Docker用ディレクトリー作成][bash]{
 mkdir -p initdb
 cd initdb
@@ -105,9 +104,8 @@ scrapy genspider qiita_trend qiita.com
 
 
 == アイテム設定
-Spiderの雛形が作られたらitems.pyを編集します。
+Spiderの雛形が作られたらitems.pyを編集します。編集するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。
 
 こちらはSpiderが出力するアイテムを設定するところになります。下のようにQiitaTrendScrapyItemのところを編集します。
 
@@ -120,31 +118,13 @@ class QiitaTrendScrapyItem(scrapy.Item):
     count = scrapy.Field()
 //}
 
-次はキャッシュの設定をします。
-
-== キャッシュの設定
-
-キャッシュの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
-
-下のようにHTTPCACHE_ENABLEDのところからコメントアウトされているので、コメントアウトを解除するように編集します。
-
-//list[HTTPCACHE][キャッシュの設定][python]{
-HTTPCACHE_ENABLED = True
-HTTPCACHE_EXPIRATION_SECS = 0
-HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = []
-HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-//}
+次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
 
 次はpipelineの設定をします。
 
 
 == Pipelineの設定
-データベースに記録するにはPipelineの設定を行います。キャッシュを設定したにsettings.pyで行います。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
+データベースに記録するにはPipelineの設定を行います。settings.pyで行います。編集するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。
 
 下のようにITEM_PIPELINESのところからコメントアウトされているので、コメントアウトを解除するように編集します。
 
@@ -154,17 +134,10 @@ ITEM_PIPELINES = {
 }
 //}
 
-
-
 次はデータベースの設定ファイルを作成します。
 
-
 == データベースの設定
-データベースの設定ファイルを作成します。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/database.py}です。
-
-もしデータベースのデバック情報が不要なときは@<code>{echo=False}にします。
+データベースの設定ファイルを作成します。作成するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/database.py}です。
 
 //list[DATABASE][データベースの設定][python]{
 from sqlalchemy import create_engine
@@ -196,14 +169,13 @@ Base = declarative_base()
 Base.query = session.query_property()
 //}
 
+もしデータベースのデバック情報が不要なときは@<code>{echo=False}にします。
 
 次はテーブル情報を作成します。
 
 
 == テーブル情報の作成
-テーブル情報ファイルを作成します。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/tag.py}です。
+テーブル情報ファイルを作成します。作成するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/tag.py}です。
 
 //list[tag][テーブル情報ファイルの作成][python]{
 import sys
@@ -228,23 +200,39 @@ if __name__ == '__main__':
     main(sys.argv)
 //}
 
+次はPipelineを作成します。
 
+== Pipeline作成
+Pipelineでは受け取ったitemに対して処理をします。作成するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/pipeline.py}です。
+
+
+//list[QiitaTrendScrapyPipeline][Pipelineの編集][python]{
+from itemadapter import ItemAdapter
+from . database import session ,Base
+from . tag import Tag
+
+
+class QiitaTrendScrapyPipeline:
+    def process_item(self, item, spider):
+        tags = Tag()
+        tags.keyword = item['keyword']
+        tags.count = item['count']
+
+        session.add(tags)
+        session.commit()
+
+
+        return item
+//}
+
+Tagテーブル情報のインスタンスを用意し、@<code>{session.add}でレコードを追加して@<code>{session.commit}すると、データベースに記録します。
 
 次はSpiderを作成します。
 
 == Spider作成
-Spiderであるqiita_trend.pyを編集します。
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/spiders/qiita_trend.py}です。
-
-編集内容は下のとおりになります。
-
- 1. 上で作成したitems.pyをimportします。
- 2. Qiitaタグはaタグのcss-4czcteのclassに入っているので、response.css('a.css-4czcte')でピックアップしてfor文で回します。
- 3. Qiitaタグをカウントするので、Dictを使いカウントします。
- 4. カウントが終わったらアイテムとして出力します。
+Spiderであるqiita_trend.pyを編集します。編集するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/spiders/qiita_trend.py}です。
 
 できたものは下のようになります。
-
 
 //list[QiitaTrendSpider][Spiderの編集][python]{
 import scrapy
@@ -269,39 +257,56 @@ class QiitaTrendSpider(scrapy.Spider):
             yield QiitaTrendScrapyItem(keyword = keyword, count = count)
 //}
 
-次はPipelineを作成します。
+=== 解説
+Spiderのソースコードを解説します。
 
-== Pipeline
-Pipelineでは受け取ったitemに対して処理をします。
+他の章と同じようにスクレイピングします。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/pipeline.py}です。
+//emlist[][python]{
+from qiita_trend_scrapy.items import QiitaTrendScrapyItem
+//}
+上で作成したitems.pyをimportしています。
 
-Tagテーブル情報のインスタンスを用意し、@<code>{session.add}でレコードを追加して@<code>{session.commit}すると、データベースに記録されていきます。
+//emlist[][python]{
+name = 'qiita_trend'
+//}
+nameはSpiderの名前でクロールするときに指定する名前です。
 
+//emlist[][python]{
+start_urls = ['http://qiita.com/']
+//}
+allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
 
-//list[QiitaTrendScrapyPipeline][Pipelineの編集][python]{
-from itemadapter import ItemAdapter
-from . database import session ,Base
-from . tag import Tag
+//emlist[][python]{
+start_urls = ['http://qiita.com/']
+//}
+start_urlsはスクレイピングするURLを配列で指定します。デフォルトではstart_urlsで指定されたURLをスクレイピングしてparse関数に引き渡します。
 
-
-class QiitaTrendScrapyPipeline:
-    def process_item(self, item, spider):
-        tags = Tag()
-        tags.keyword = item['keyword']
-        tags.count = item['count']
-
-        session.add(tags)
-        session.commit()
-
-
-        return item
+//emlist[][python]{
+keywords = {}
+for items in response.css('a.css-4czcte'):
+    key = items.css('a.css-4czcte::text').extract_first()
+    if (key in keywords.keys()):
+        keywords[key] = keywords[key] + 1
+    else:
+        keywords[key] = 1
 //}
 
+今回の例ではQiitaタグは、class指定されているcss-4czcteのaタグをすべて取得します。@<code>{response.css('a.css-4czcte')}でピックアップしてfor文で回します。すでに存在しているQiitaタグがあったら辞書の数値をインクリメントし、存在しないときは1で初期化します。
+
+//emlist[][python]{
+for keyword, count in keywords.items():
+    yield QiitaTrendScrapyItem(keyword = keyword, count = count)
+//}
+
+カウントが終わったらデータを引き引き渡します。
 
 == クローラーの実行
-Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGメッセージにSqlalchemyの実行結果が表示されていることが確認できます。
+Spiderを作成し各種設定をしたら、Dockerを起動しクローラーを実行します。 DEBUGメッセージにSqlalchemyの実行結果が表示されていることが確認できます。
 //list[crawl][クローラーの実行][bash]{
+cd ../docker
+docker-compose up -d
+../qiita_trend_scrapy
 scrapy crawl qiita_trend
 //}
 
@@ -324,7 +329,39 @@ select * from tags order by count desc;
 確認が終わり、データベースを落とすときは下のコマンドを叩きます。
 
 //list[docker down][Dockerの落とし方][bash]{
-cd docker
+cd ../docker
 docker-compose down
 //}
+
+== ソースコードについて
+この章で使用したソースコードはGitHubにあります。
+
+@<href>{https://github.com/hideaki-kawahara/scrapy-source/tree/chapter3, https://github.com/hideaki-kawahara/scrapy-source/tree/chapter3}
+
+実行する手順を下に記載します。
+
+ 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+   @<code>{mkdir -p scrapy-source}
+ 2. Cloneする。@<br>{}
+   @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
+ 3. chapter3をcheckoutする。@<br>{}
+   @<code>{git checkout chapter3}
+ 4. 仮想環境を作成する。@<br>{}
+   @<code>{python -m venv .venv}
+ 5. 仮想環境に入る。@<br>{}
+   @<code>{source .venv/bin/activate}
+ 6. ライブラリーをインストールする。@<br>{}
+   @<code>{pip install -r requirements.txt}
+ 7. Dockerディレクトリーに入る。
+   @<code>{cd docker}
+ 8. Dockerを起動する。
+   @<code>{docker-compose up -d}
+ 9. 該当のディレクトーに入る。@<br>{}
+   @<code>{cd ../qiita_trend_scrapy}
+ 10. 実行する。@<br>{}
+   @<code>{scrapy crawl etsuran_mlit}
+
+※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter2のディレクトリーは消えません。気になるようなら削除してください。
+
+@<code>{rm -rf mlit_scrapy}
 
