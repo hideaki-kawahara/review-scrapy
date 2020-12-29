@@ -212,6 +212,11 @@ end
 //}
 SplashのLua scriptと呼ばれるJavaScriptを記述します。今回のサイトはプライベートモードだと正しくJavaScriptが動作しないので、Lua scriptを使い一度プライベートモードをオフにしてからJavaScriptレンダリングを行います。
 
+詳しいことは下に記載しております。
+
+Website is not rendered correctly
+@<href>{https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly, https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly}
+
 Dockerで最初からプライベートモードをオフにして起動も可能ですが、安全な運用としてはLua scriptにてモード切替をするようにしました。
 
 //emlist[][python]{
