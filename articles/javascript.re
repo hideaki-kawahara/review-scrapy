@@ -57,7 +57,7 @@ docker-compose up -d
 //indepimage[Splash][SplashのGUI]
 
 == プロジェクトの作成
-次にプロジェクトを作成します。Dockerディレクトーから上の階層に戻り、下のコマンドを実行するとscrapbox_scrapyというディレクトリーが作成されます。
+次にプロジェクトを作成します。Dockerディレクトリーから上の階層に戻り、下のコマンドを実行するとscrapbox_scrapyというディレクトリーが作成されます。
 
 //list[startproject][Projectの作成][bash]{
 cd ..
