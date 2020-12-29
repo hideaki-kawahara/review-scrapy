@@ -51,7 +51,7 @@ class MlitScrapyItem(scrapy.Item):
     address = scrapy.Field()
 //}
 
-ディレイタイムの設定とキャッシュの設定は、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
+次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
 
 次はSpiderを作成します。
 
