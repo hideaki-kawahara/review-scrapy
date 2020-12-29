@@ -277,7 +277,7 @@ name = 'qiita_trend'
 nameはSpiderの名前でクロールするときに指定する名前です。
 
 //emlist[][python]{
-start_urls = ['http://qiita.com/']
+allowed_domains = ['qiita.com']
 //}
 allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
 
