@@ -124,7 +124,7 @@ allowed_domains = ['news.yahoo.co.jp']
 allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
 
 //emlist[][python]{
-    start_urls = ['https://news.yahoo.co.jp/topics/business']
+start_urls = ['https://news.yahoo.co.jp/topics/business']
 //}
 start_urlsはスクレイピングするURLを配列で指定します。デフォルトではstart_urlsで指定されたURLをスクレイピングしてparse関数に引き渡します。@<br>{}
 
