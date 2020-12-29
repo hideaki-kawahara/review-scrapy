@@ -191,7 +191,7 @@ yield scrapy.FormRequest.from_response(
 
 
 == クローラーの実行
-Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでaddressとtitleがピックアップされていることが確認できます。
+Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところで情報（licence,address,title）がピックアップされていることが確認できます。
 //list[crawl][クローラーの実行][bash]{
 scrapy crawl etsuran_mlit
 //}
