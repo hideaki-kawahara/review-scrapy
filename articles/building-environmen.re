@@ -70,7 +70,7 @@ source .venv/bin/activate
 Dockerの知識は必須ではないですが、Dockerのインストールと起動する知識があると良いです。
 
 次のようにコマンドラインを叩いて、dockerとdocker-composeのバージョンが出るようにDockerを準備してください。
-//list[docker][Dockerのバージョンについて][bash]{
+//list[docker][Dockerのバージョン確認について][bash]{
 docker version
 docker-compose version
 //}
