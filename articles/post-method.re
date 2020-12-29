@@ -36,7 +36,7 @@ scrapy genspider etsuran_mlit etsuran.mlit.go.jp
 
 
 == アイテム設定
-Spiderの雛形が作られたらitems.pyを編集します。設定するファイルは@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/items.py}です。
+Spiderの雛形が作られたらitems.pyを編集します。編集するファイルは@<code>{scrapy-source/mlit_scrapy/mlit_scrapy/items.py}です。
 
 
 こちらはSpiderが出力するアイテムを設定するところになります。下のようにMlitScrapyItemのところを編集します。

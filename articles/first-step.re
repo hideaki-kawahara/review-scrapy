@@ -43,7 +43,7 @@ class YahooNewsScrapyItem(scrapy.Item):
 == ディレイタイムの設定
 ディレイタイムの設定します。
 
-これはSpiderが次のアクションに入るまでの待ち時間を設定します。設定するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
+これはSpiderが次のアクションに入るまでの待ち時間を設定します。編集するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
 
 DOWNLOAD_DELAYがコメントアウトされているので、下のようにコメントアウトを解除するように編集します。
 
@@ -58,7 +58,7 @@ DOWNLOAD_DELAY = 3
 
 キャッシュの設定します。
 
-これはSpiderがスクレイピングするサイトをキャッシュする設定をします。設定するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
+これはSpiderがスクレイピングするサイトをキャッシュする設定をします。編集するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
 
 HTTPCACHE_ENABLEDのところからコメントアウトされているので、下のようにコメントアウトを解除するように編集します。
 
