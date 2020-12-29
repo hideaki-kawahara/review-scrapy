@@ -1,49 +1,27 @@
+= Lazy loading画面のスクレイピング
 
-= 環境構築
+Lazy loading画面をスクレイピングします。
+
+Lazy loading画面はJavaScriptが画面のレンダリングをして、ブラウザで表示されていないところは表示を行わず、利用者がスクロールを行って新たに画面が必要になったら画面のレンダリングをして画面表示する仕組みです。
+
+自動的に次ページをめくるサイトに多く見られる手法です。
+
+前の章に引き続きJavaScriptレンダリングとしてSplashを利用します。
+
+対象サイトは「技術書典10オンラインマーケットの新刊」でログイン無しにてアクセスできるページです。
+
+URL:@<href>{https://techbookfest.org/event/tbf10/market/newbook, https://techbookfest.org/event/tbf10/market/newbook}@<br>{}
+
+5段階評価で難易度を記載します。技術書典10オンラインマーケットの新刊の難易度は5つです。
+
+難易度：★★★★★
 
 
-== JavaScriptレンダリングの導入
-ローカル環境で動かしますが、ORM（オブジェクト関係マッピング、Object-Relational Mapping）を使用してデータベースにアクセスします。
-
-今回はORMとしてSplashを利用します。環境構築@<chap>{building-environmen}をしたあとにSqlalchemyをインストールします。
-//list[scrapy-splash][Splashの用意][bash]{
-pip install scrapy-splash
-//}
-
-
-== Splashの準備
-SplashをDockerで準備します。
-
-Dockerの入れ方は、この書籍では記載しませんが、dockerとdocker-composeを事前にインストールしておきます。@<br>{}
-
-Docker用のディレクトリーを作成します。
-//list[docker][Docker用ディレクトリー作成][bash]{
-mkdir -p docker
-cd docker
-//}
-
-Docker用ディレクトリーにdocker-compose.ymlファイルを作成します。
-
-//list[After][docker-compose.ymlファイルの内容][yml]{
-version: '3'
-services:
-  scrapinghub:
-    image: scrapinghub/splash:latest
-    container_name: scrapinghub
-    environment:
-      TZ: Asia/Tokyo
-    ports:
-      - 8050:8050
-//}
-
-Dockerコンテナーを起動します。
-//list[docker-compose][Dockerコンテナーを起動][bash]{
-docker-compose up -d
-//}
-
+== 前準備
+環境構築@<chap>{building-environmen}をしたあとに@<hd>{javascript|JavaScriptレンダリングの導入}と@<hd>{javascript|Splashの準備}を行います。
 
 == プロジェクトの作成
-次にプロジェクトを作成します。Dockerディレクトーから上の階層に戻り、下のコマンドを実行するとqiita_trend_scrapyというディレクトリーが作成されます。
+次にプロジェクトを作成します。Dockerディレクトリーに居る場合は上の階層に戻り、下のコマンドを実行するとtechbookfest_scrapyというディレクトリーが作成されます。
 
 //list[startproject][Projectの作成][bash]{
 cd ..
@@ -62,11 +40,9 @@ scrapy genspider techbookfest_url techbookfest.org
 
 
 == アイテム設定
-Spiderの雛形が作られたらitems.pyを編集します。
+Spiderの雛形が作られたらitems.pyを編集します。編集するファイルは@<code>{techbookfest_scrapy/techbookfest_scrapy/items.py}です。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。
-
-こちらはSpiderが出力するアイテムを設定するところになります。下のようにQiitaTrendScrapyItemのところを編集します。
+こちらはSpiderが出力するアイテムを設定するところになります。下のようにTechbookfestScrapyItemのところを編集します。
 
 //list[item][編集後のitems.py][python]{
 import scrapy
@@ -74,196 +50,307 @@ import scrapy
 
 class TechbookfestScrapyItem(scrapy.Item):
     title = scrapy.Field()
-    digital = scrapy.Field()
-    paper = scrapy.Field()
     url = scrapy.Field()
-//}
+    money1 = scrapy.Field()
+    money2 = scrapy.Field()
+    money3 = scrapy.Field()
+    money4 = scrapy.Field()
+    openning = scrapy.Field()//}
 
-次はディレイタイムの設定をします。
+次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
 
-== ディレイタイムの設定
-ディレイタイムの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
+あわせて@<hd>{javascript|JavaScriptレンダリング用の設定}も設定しておきます。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
-
-下のようにDOWNLOAD_DELAYがコメントアウトされているので、コメントアウトを解除するように編集します。
-
-
-//list[DOWNLOAD_DELAY][キャッシュの設定][python]{
-DOWNLOAD_DELAY = 3
-//}
-
-次はキャッシュの設定をします。
-
-== キャッシュの設定
-キャッシュの設定するためにsettings.pyを編集します。これはSpiderが出力するアイテムを設定します。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
-
-下のようにHTTPCACHE_ENABLEDのところからコメントアウトされているので、コメントアウトを解除するように編集します。
-
-//list[HTTPCACHE][キャッシュの設定][python]{
-HTTPCACHE_ENABLED = True
-HTTPCACHE_EXPIRATION_SECS = 0
-HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = []
-HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
-//}
-
-次はDownload Middlewareの設定をします。
-
-
-SPIDER_MIDDLEWARES = {
-   'techbookfest_scrapy.middlewares.TechbookfestScrapySpiderMiddleware': 543,
-}
-
-
-
-
-== Download Middlewareの設定
-Splashを利用するためにはDownload Middlewareの設定します。
-
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/settings.py}です。
-
-下のようにDOWNLOADER_MIDDLEWARESのところからコメントアウトされているので、コメントアウトを解除するように編集し、scrapy_splashの部分を追記します。DOWNLOADER_MIDDLEWARESの値が750なので、scrapy_splashは少し小さい値に設定します。
-
-そして、その下にJavaScriptレンダリングが起動しているURLを@<code>{SPLASH_URL = 'http://localhost:8050/'}指定します。
-
-
-//list[DOWNLOADER_MIDDLEWARES][pipelineの設定][python]{
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy_splash.SplashCookiesMiddleware': 723,
-    'scrapy_splash.SplashMiddleware': 725,
-    'techbookfest_scrapy.middlewares.TechbookfestScrapyDownloaderMiddleware': 810,
-}
-SPLASH_URL = 'http://localhost:8050/'
-DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
-HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
-//}
-
-
-次はSpiderを作成します。
 
 == Spider作成
-Spiderであるqiita_trend.pyを編集します。
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/spiders/qiita_trend.py}です。
-
-編集内容は下のとおりになります。
-
- 1. 上で作成したitems.pyをimportします。
- 2. Qiitaタグはaタグのcss-4czcteのclassに入っているので、response.css('a.css-4czcte')でピックアップしてfor文で回します。
- 3. Qiitaタグをカウントするので、Dictを使いカウントします。
- 4. カウントが終わったらアイテムとして出力します。
+Spiderであるtechbookfest_url.pyを編集します。編集するファイルは@<code>{techbookfest_scrapy/techbookfest_scrapy/spiders/techbookfest_url.py}です。
 
 できたものは下のようになります。
-
-https://scrapbox.io/wakaba-manga/
 
 //list[QiitaTrendSpider][Spiderの編集][python]{
 import scrapy
 import scrapy_splash
-from scrapbox_scrapy.items import ScrapboxScrapyItem
+from techbookfest_scrapy.items import TechbookfestScrapyItem
 
-LUA_SCRIPT = """
+
+LUA_SCRIPT_LIST = """
+function main(splash, args)
+  local scroll_to = splash:jsfunc("window.scrollTo")
+  splash:go(args.url)
+  for _ = 1, 20 do
+    scroll_to(0, 10000)
+    splash:wait(1)
+  end
+  html = splash:html()
+  return html
+end
+"""
+
+LUA_SCRIPT_DETAIL = """
 function main(splash)
     splash.private_mode_enabled = false
     splash:go(splash.args.url)
-    splash:wait(1)
+    splash:wait(5)
     html = splash:html()
+    splash.private_mode_enabled = true
     return html
 end
 """
 
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 
-class ScrapboxUrlSpider(scrapy.Spider):
-    name = 'scrapbox_url'
-    allowed_domains = ['scrapbox.io']
-    start_url = ''
-
-    def __init__(self, *args, **kwargs):
-        super(ScrapboxUrlSpider, self).__init__(*args, **kwargs)
-
+class TechbookfestUrlSpider(scrapy.Spider):
+    name = 'techbookfest_url'
+    allowed_domains = ['techbookfest.org']
+    start_url = 'https://techbookfest.org/event/tbf10/market/newbook'
 
     def start_requests(self):
-        if self.start_url != '':
-            yield scrapy_splash.SplashRequest(
-                self.start_url,
-                self.parse,
-                endpoint='execute',
-                args={'lua_source': LUA_SCRIPT},
-            )
+        yield scrapy_splash.SplashRequest(
+            self.start_url,
+            self.parse,
+            headers={'User-Agent': USER_AGENT},
+            endpoint='execute',
+            args={'lua_source': LUA_SCRIPT_LIST},
+        )
 
     def parse(self, response):
-        for uls in response.css('ul.page-list'):
-            for hrefs in uls.css('a'):
-                yield ScrapboxScrapyItem(
-                    title = hrefs.css('a::text').extract_first(),
-                    url = response.urljoin(hrefs.css('a::attr(href)').extract_first())
+        for hrefs in response.css('div.r-bnwqim'):
+            href = hrefs.css('a::attr(href)').extract_first()
+            if href is not None:
+                yield scrapy_splash.SplashRequest(
+                    response.urljoin(href),
+                    self.after_parse,
+                    headers={'User-Agent': USER_AGENT},
+                    endpoint='execute',
+                    args={'lua_source': LUA_SCRIPT_DETAIL},
                 )
+
+    def after_parse(self, response):
+        money_items = [''] * 4
+        openning = ''
+
+        for information in response.css('div.css-1dbjc4n div.r-18u37iz'):
+            for h2_tag in information.css('div.css-1dbjc4n div.r-13awgt0 div.r-1jkjb'):
+                title = h2_tag.css('h2::text').extract_first()
+            for money_tag in information.css('div.css-18t94o4'):
+                money = money_tag.css('div.css-901oao::text').extract()
+                if len(money) == 0:
+                    pass
+                elif '電子版' in money[0]:
+                    money_items[0] = ':'.join(money)
+                elif '電子＋' in money[0]:
+                    money_items[1] = ':'.join(money)
+                elif '梅' in money[0]:
+                    money_items[1] = ':'.join(money)
+                elif '竹' in money[0]:
+                    money_items[2] = ':'.join(money)
+                elif '松' in money[0]:
+                    money_items[3] = ':'.join(money)
+            for event in information.css('div.css-1dbjc4n'):
+                openning_tag = event.css('div.r-1enofrn::text').extract_first()
+                if openning_tag is None:
+                    pass
+                elif '初出イベント' in openning_tag:
+                    openning = openning_tag
+
+        yield TechbookfestScrapyItem(
+            title = title,
+            money1 = money_items[0],
+            money2 = money_items[1],
+            money3 = money_items[2],
+            money4 = money_items[3],
+            openning = openning,
+            url=response.url)
 //}
 
-次はPipelineを作成します。
+=== 解説
+Spiderのソースコードを解説します。
 
-== Pipeline
-Pipelineでは受け取ったitemに対して処理をします。
+他の章と同じようにスクレイピングします。
 
-ファイルがある場所は@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/pipeline.py}です。
+//emlist[][python]{
+import scrapy_splash
+from techbookfest_scrapy.items import TechbookfestScrapyItem
+//}
+scrapy_splashをimportしてます。
 
-Tagテーブル情報のインスタンスを用意し、@<code>{session.add}でレコードを追加して@<code>{session.commit}すると、データベースに記録されていきます。
+上で作成したitems.pyをimportしています。
 
+//emlist[][python]{
+LUA_SCRIPT_LIST = """
+function main(splash, args)
+  local scroll_to = splash:jsfunc("window.scrollTo")
+  splash:go(args.url)
+  for _ = 1, 20 do
+    scroll_to(0, 10000)
+    splash:wait(1)
+  end
+  html = splash:html()
+  return html
+end
+"""
+//}
+SplashのLua scriptと呼ばれるJavaScriptを記述します。書籍一覧はLazy loadingを使用しているので、それに対応するためSplashを使用して表示したあとJavaScriptで少しずつスクロールさせて、そのあとHTMLを取得しています。
 
-//list[QiitaTrendScrapyPipeline][Pipelineの編集][python]{
-from itemadapter import ItemAdapter
-from . database import session ,Base
-from . tag import Tag
+この辺りの数値を大きくすると504タイムアウトを起こすのでいじらないでください。
 
+//emlist[][python]{
+LUA_SCRIPT_DETAIL = """
+function main(splash)
+    splash.private_mode_enabled = false
+    splash:go(splash.args.url)
+    splash:wait(5)
+    html = splash:html()
+    splash.private_mode_enabled = true
+    return html
+end
+"""
+//}
+書籍詳細もLazy loadingを使用しているので、Waitを入れています。前の章と同じようにプライベートモードだと正しくJavaScriptが動作しないので、プライベートモードをオフにしてからJavaScriptレンダリングを行います。
 
-class QiitaTrendScrapyPipeline:
-    def process_item(self, item, spider):
-        tags = Tag()
-        tags.keyword = item['keyword']
-        tags.count = item['count']
-
-        session.add(tags)
-        session.commit()
-
-
-        return item
+//emlist[][python]{
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 //}
 
+Scrapyの設定でユーザーエージェントが利用できますが、JavaScriptレンダリングでは未設定になるためSpiderの方で用意します。
+
+//emlist[][python]{
+name = 'techbookfest_url'
+//}
+nameはSpiderの名前でクロールするときに指定する名前です。
+
+
+//emlist[][python]{
+allowed_domains = ['techbookfest.org']
+//}
+allowed_domainsは指定されたドメインのみで動くための設定で、リンクをたどっていくと指定されたドメイン以外にスクレイピングすることを防止します。
+
+//emlist[][python]{
+start_url = 'https://techbookfest.org/event/tbf10/market/newbook'
+//}
+start_urlsはスクレイピングするURLを配列で指定します。今回はLua scriptが使用します。
+
+//emlist[][python]{
+def start_requests(self):
+    yield scrapy_splash.SplashRequest(
+        self.start_url,
+        self.parse,
+        headers={'User-Agent': USER_AGENT},
+        endpoint='execute',
+        args={'lua_source': LUA_SCRIPT_LIST},
+    )
+//}
+
+start_requestsを指定しないと、Scrapyはstart_urlに指定されたURLに対してGETメソッドでアクセスします。今回はJavaScriptレンダリングを指定したいので、start_requests用意しSplashRequestでアクセスするようにします。
+
+@<code>{endpoint='execute'}はJavaScriptレンダリングに対してやり取りをするファイルとなり、そこへ@<code>{args={'lua_source': LUA_SCRIPT_LIST}}にてLua scriptを実行させ書籍一覧の取得します。
+
+@<code>{headers={'User-Agent': USER_AGENT}}でユーザーエージェントを指定します。
+
+
+//emlist[][python]{
+for hrefs in response.css('div.r-bnwqim'):
+    href = hrefs.css('a::attr(href)').extract_first()
+    if href is not None:
+        yield scrapy_splash.SplashRequest(
+            response.urljoin(href),
+            self.after_parse,
+            headers={'User-Agent': USER_AGENT},
+            endpoint='execute',
+            args={'lua_source': LUA_SCRIPT_DETAIL},
+        )
+//}
+
+divタグのclass指定されているr-bnwqimに書籍詳細の情報があるので、その中にあるaタグの情報を取得します。@<code>{response.css('div.r-bnwqim')}でピックアップしてfor文で回して書籍詳細のLua scriptを実行させます。
+
+@<code>{args={'lua_source': LUA_SCRIPT_DETAIL}}にてLua scriptを実行させ書籍一覧の取得します。
+
+//emlist[][python]{
+for information in response.css('div.css-1dbjc4n div.r-18u37iz'):
+    for h2_tag in information.css('div.css-1dbjc4n div.r-13awgt0 div.r-1jkjb'):
+        title = h2_tag.css('h2::text').extract_first()
+    for money_tag in information.css('div.css-18t94o4'):
+        money = money_tag.css('div.css-901oao::text').extract()
+        if len(money) == 0:
+            pass
+        elif '電子版' in money[0]:
+            money_items[0] = ':'.join(money)
+        elif '電子＋' in money[0]:
+            money_items[1] = ':'.join(money)
+        elif '梅' in money[0]:
+            money_items[1] = ':'.join(money)
+        elif '竹' in money[0]:
+            money_items[2] = ':'.join(money)
+        elif '松' in money[0]:
+            money_items[3] = ':'.join(money)
+    for event in information.css('div.css-1dbjc4n'):
+        openning_tag = event.css('div.r-1enofrn::text').extract_first()
+        if openning_tag is None:
+            pass
+        elif '初出イベント' in openning_tag:
+            openning = openning_tag
+//}
+
+divタグのclassを検索して各種情報があるので、その中にあるdivタグのテキスト情報を取得します。似たclassが多数あるので、複数することで余計な情報を取得しないようにしてます。
+
+@<code>{h2_tag.css('h2::text')}で書籍のタイトルを取得してます。
+
+@<code>{money_tag.css('div.css-901oao::text')}で価格を取得しますが、複数あるので内容を確認して別の配列に入れておきます。
+
+@<code>{event.css('div.r-1enofrn::text')}で初出イベントを取得します。この項目は出店サークルの任意入力なので「技術書典10」の数字が全角のときや半角のときがありますが、そのままとします。
+
+//emlist[][python]{
+yield TechbookfestScrapyItem(
+    title = title,
+    money1 = money_items[0],
+    money2 = money_items[1],
+    money3 = money_items[2],
+    money4 = money_items[3],
+    openning = openning,
+    url=response.url)
+//}
+書籍の詳細を引き渡します。
+
+@<code>{response.url}はスクレイピングしているURLなので、これもあわせて引き渡します。
 
 == クローラーの実行
-Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGメッセージにSqlalchemyの実行結果が表示されていることが確認できます。
+Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところで情報（title,money1,money2,money3,money4,openning,url）がピックアップされていることが確認できます。
+
 //list[crawl][クローラーの実行][bash]{
-scrapy crawl qiita_trend
+scrapy crawl techbookfest_url
 //}
 
-== データベースの確認
-実行が終わったらデータの確認をします。データベースに入って確認します。
+※非常にゆっくりスクレイピングするので時間のあるときに行ってください。
 
-Dockerに入り、SQLを叩きます。
+== ソースコードについて
+この章で使用したソースコードはGitHubにあります。
 
-//list[result][データベース登録確認][bash]{
-docker exec -i -t scrapy_postgres bash
-su postgres
-psql
-select * from tags order by count desc;
-//}
+@<href>{https://github.com/hideaki-kawahara/scrapy-source/tree/chapter5, https://github.com/hideaki-kawahara/scrapy-source/tree/chapter5}
 
-下のように表示されたら正しく実行されています。
-//indepimage[result2]
+実行する手順を下に記載します。
 
+ 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+   @<code>{mkdir -p scrapy-source}
+ 2. Cloneする。@<br>{}
+   @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
+ 3. chapter5をcheckoutする。@<br>{}
+   @<code>{git checkout chapter5}
+ 4. 仮想環境を作成する。@<br>{}
+   @<code>{python -m venv .venv}
+ 5. 仮想環境に入る。@<br>{}
+   @<code>{source .venv/bin/activate}
+ 6. ライブラリーをインストールする。@<br>{}
+   @<code>{pip install -r requirements.txt}
+ 7. Dockerディレクトリーに入る。
+   @<code>{cd docker}
+ 8. Dockerを起動する。
+   @<code>{docker-compose up -d}
+ 9. 該当のディレクトーに入る。@<br>{}
+   @<code>{cd ../techbookfest_scrapy}
+ 10. 実行する。@<br>{}
+   @<code>{scrapy crawl techbookfest_url}
 
-確認が終わり、データベースを落とすときは下のコマンドを叩きます。
+※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter5のディレクトリーは消えません。気になるようなら削除してください。
 
-//list[docker down][Dockerの落とし方][bash]{
-cd docker
-docker-compose down
-//}
-
-
-
-
-
-
+@<code>{rm -rf techbookfest_scrapy}
 
