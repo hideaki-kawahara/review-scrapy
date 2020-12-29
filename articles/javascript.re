@@ -258,7 +258,7 @@ ulタグのclass指定されているpage-listにページ情報があるので�
 == クローラーの実行
 Spiderを作成し各種設定をしたら、クローラーを実行します。 DEBUGのところでurlとtitleがピックアップされていることが確認できます。
 
-なお、今回ログインしないでも見ることができるページを参考例として記載ます。
+なお、今回ログインしないでも見ることができるページを参考例として記載します。
 
 URL:@<href>{https://scrapbox.io/wakaba-manga/, https://scrapbox.io/wakaba-manga/}
 //list[crawl][クローラーの実行][bash]{
