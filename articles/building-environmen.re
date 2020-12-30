@@ -9,7 +9,7 @@
 
 macOSではPythonがインストールされていますが、macOS 11 Big Surで入っているPythonのバージョンは2.7.16で、冒頭でも書いたとおり2系になるので3系に変更します。
 
-@<href>{https://www.python.org/, https://www.python.org/}で配布しているインストーラーでも、pyenvやPipenvなどの管理ツールなど、またはhomebrewに慣れている方はhomebrewを使用してください。Anaconda系が入っている方は変更してくださいとは言いませんが、余計なツールを入れてしまうなどがあるので、新規に入れるのはオススメしておりません。
+@<href>{https://www.python.org/, https://www.python.org/} で配布しているインストーラーでも、pyenvやPipenvなどの管理ツールなど、またはHomebrewに慣れている方はHomebrewを使用してください。Anaconda系が入っている方は変更してくださいとは言いませんが、余計なツールを入れてしまうなどがあるので、新規に入れるのはオススメしておりません。
 
 上のインストールツールを使用してPythonの3系をインストールします。
 
@@ -17,7 +17,7 @@ macOSではPythonがインストールされていますが、macOS 11 Big Sur�
 
 Windows 10ではPythonが入っておりません。
 
-macOSと同じく@<href>{https://www.python.org/, https://www.python.org/}で配布しているインストーラーで良いです。もしWSL2を利用しているなら、その環境にPythonの3系は自動的に入ります。それとmacOSと同じようにAnaconda系はオススメしません。
+macOSと同じく@<href>{https://www.python.org/, https://www.python.org/} で配布しているインストーラーで良いです。もしWSL2を利用しているなら、その環境にPythonの3系は自動的に入ります。それとmacOSと同じようにAnaconda系はオススメしません。
 
 上のインストールツールを使用してPythonの3系をインストールします。
 
@@ -57,13 +57,9 @@ pip install scrapy
 
 これで環境ができました。あとは好きなエディターで読み込ませれば完了です。
 
-なお、筆者作成のソースを利用するときはソースをCloneするので下のようにします。
-//list[clone venv][仮想環境構築][bash]{
-git clone git@github.com:hideaki-kawahara/scrapy-source.git
-cd scrapy-source
-python -m venv .venv
-source .venv/bin/activate
-//}
+なお、この書籍で使用した筆者作成のソーリコードはGitHubに公開しています。
+
+@<href>{https://github.com/hideaki-kawahara/scrapy-source.git, https://github.com/hideaki-kawahara/scrapy-source.git}
 
 == Docker
 この書籍ではDockerを使うことを前提で記載しています。
