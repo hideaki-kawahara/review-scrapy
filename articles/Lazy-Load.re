@@ -18,7 +18,12 @@ URL:@<href>{https://techbookfest.org/event/tbf10/market/newbook, https://techboo
 
 
 == 前準備
+JavaScriptレンダリングをDockerで準備します。
+
+
 @<chap>{building-environmen}をしたあとに@<hd>{javascript|JavaScriptレンダリングの導入}と@<hd>{javascript|Splashの準備}を行います。
+
+注意：Dockerの使用メモリはデフォルトでは2Mバイトで、JavaScriptレンダリングとして動いているDockerコンテナーがメモリーエラーで落ちることがあります。8Mバイトに増やしてください。
 
 == プロジェクトの作成
 次にプロジェクトを作成します。Dockerディレクトリーに居る場合は上の階層に戻り、下のコマンドを実行するとtechbookfest_scrapyというディレクトリーが作成されます。
