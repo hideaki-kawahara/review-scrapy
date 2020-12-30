@@ -22,7 +22,7 @@ bookname: scrapy-practice
 language: ja
 
 # 書名
-booktitle: {name: "　PythonとScrapyを使ったWebスクレイピング実践編　〜あのサイトをスクレイピングするまで！〜", file-as: "Scrapy実践編"}
+booktitle: {name: "PythonとScrapyを使ったWebスクレイピング実践編　〜あのサイトをスクレイピングするまで！〜", file-as: "Scrapy実践編"}
 
 # 著者名。「, 」で区切って複数指定できる
 aut: [{name: "ブライトシステム編", file-as: "ブライトシステムヘン"}]
