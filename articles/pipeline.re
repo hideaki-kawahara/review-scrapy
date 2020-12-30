@@ -128,7 +128,7 @@ class QiitaTrendScrapyItem(scrapy.Item):
 
 
 == Pipelineの設定
-データベースに記録するにはPipelineの設定を行います。settings.pyで行います。編集するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。
+データベースに記録するにはPipelineの設定を行います。settings.pyで行います。編集するファイルは@<code>{scrapy-source/qiita_trend_scrapy/qiita_trend_scrapy/items.py}です。@<br>{}
 
 下のようにITEM_PIPELINESのところからコメントアウトされているので、コメントアウトを解除するように編集します。
 

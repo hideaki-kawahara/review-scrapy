@@ -163,7 +163,7 @@ for items in response.css('li.newsFeed_item'):
     )
 //}
 
-今回の例ではニュース情報は、class指定されているnewsFeed_itemのliタグをすべて取得します。liタグにニュース記事の一覧が入っているので、@<code>{response.css('li.newsFeed_item')}でピックアップしてfor文で回します。
+今回の例ではニュース情報を取得します。まずclass指定されているnewsFeed_itemのliタグをすべて取得します。liタグにニュース記事の一覧が入っているので、@<code>{response.css('li.newsFeed_item')}でピックアップしてfor文で回します。
 
 @<code>{response.css}で抽出されたのを順次@<code>{yield}命令を使用して@<code>{YahooNewsScrapyItem}の中ではurlとtitleの変数が指定されており、そこから順次データを引き渡します。@<br>{}
 
@@ -188,7 +188,7 @@ Spiderを作成し各種設定をしたら、クローラーを実行します�
 scrapy crawl yahoo_news
 //}
 
-csv形式で出力も可能です。
+csv形式での出力も可能です。
 //list[crawl_csv][クローラーの実行、CSVで出力][bash]{
 scrapy crawl yahoo_news -o yahoo_news.csv
 //}

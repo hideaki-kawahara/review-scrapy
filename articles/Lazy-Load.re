@@ -249,7 +249,7 @@ def start_requests(self):
 
 start_requestsを指定しないと、Scrapyはstart_urlに指定されたURLに対してGETメソッドでアクセスします。今回はJavaScriptレンダリングを指定したいので、start_requests用意しSplashRequestでアクセスするようにします。
 
-@<code>{endpoint='execute'}はJavaScriptレンダリングに対してやり取りをするファイルとなり、そこへ@<code>{args={'lua_source': LUA_SCRIPT_LIST}}にてLua scriptを実行させ書籍一覧の取得します。
+@<code>{endpoint='execute'}はJavaScriptレンダリングに対してやり取りをするファイルとなり、そこへ@<code>{args={'lua_source': LUA_SCRIPT_LIST}}にてLua scriptを実行させ書籍一覧を取得します。
 
 @<code>{headers={'User-Agent': USER_AGENT}}でユーザーエージェントを指定します。
 

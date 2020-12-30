@@ -115,7 +115,7 @@ SPIDER_MIDDLEWARES = {
 //}
 
 
-Download Middlewareのところからコメントアウトされているので、コメントアウトを解除するように編集します。数値はSplashのMiddlewareが標準のDownload Middlewareより優先させたいので750以下になるように設定します。
+Download Middlewareのところからコメントアウトされているので、コメントアウトを解除するように編集します。数値についてはSplashのMiddlewareを標準のDownload Middlewareより優先させたいので、750以下となるように設定します。
 
 //list[DOWNLOADER_MIDDLEWARES][Download Middlewareの設定][python]{
 DOWNLOADER_MIDDLEWARES = {
@@ -204,7 +204,7 @@ Spiderのソースコードを解説します。
 import scrapy_splash
 from scrapbox_scrapy.items import ScrapboxScrapyItem
 //}
-scrapy_splashをimportしてます。
+scrapy_splashをimportします。
 
 上で作成したitems.pyをimportしています。
 
