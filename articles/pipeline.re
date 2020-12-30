@@ -8,7 +8,7 @@ Qiitaのトレンドをスクレイピングして分析してみます。
 
 URL:@<href>{https://qiita.com/, https://qiita.com/}@<br>{}
 
-5段階評価で難易度を記載します。Qiitaの難易度は1つですが、データベースを使用するので難易度は星2つです。
+5段階評価で難易度を記載します。「Qiita」サイトの難易度は1つですが、データベースを使用するので難易度は星2つです。
 
 難易度：★★
 
@@ -16,7 +16,7 @@ URL:@<href>{https://qiita.com/, https://qiita.com/}@<br>{}
 ローカル環境で動かしますが、ORM（オブジェクト関係マッピング、Object-Relational Mapping）を使用してデータベースにアクセスします。
 
 今回はORMとしてSqlalchemyを利用します。環境構築@<chap>{building-environmen}をしたあとにSqlalchemyとPostgreSQLを使用するのでpsycopg2をインストールします。
-//list[sqlalchemy][sqlalchemyの用意][bash]{
+//list[sqlalchemy][sqlalchemyとpsycopg2の用意][bash]{
 pip install sqlalchemy
 pip install psycopg2
 //}
@@ -193,8 +193,8 @@ class Tag(Base):
     id = Column('id', Integer, Sequence('tags_id_seq'), primary_key=True)
     keyword = Column('keyword', Text)
     count = Column('count', Integer)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=current_timestamp())
-    updated_at = Column(DateTime(timezone=True), nullable=False, server_default=current_timestamp())
+    created_at = Column(DateTime(timezone=True), nullable=False,@<embed>$|latex|\linebreak\hspace*{25ex}$ server_default=current_timestamp())
+    updated_at = Column(DateTime(timezone=True), nullable=False,@<embed>$|latex|\linebreak\hspace*{25ex}$ server_default=current_timestamp())
 
 def main(args):
     Base.metadata.create_all(bind=ENGINE)
@@ -308,9 +308,6 @@ for keyword, count in keywords.items():
 == クローラーの実行
 Spiderを作成し各種設定をしたら、Dockerを起動しクローラーを実行します。 DEBUGメッセージにSqlalchemyの実行結果が表示されていることが確認できます。
 //list[crawl][クローラーの実行][bash]{
-cd ../docker
-docker-compose up -d
-../qiita_trend_scrapy
 scrapy crawl qiita_trend
 //}
 

@@ -12,7 +12,7 @@
 
 URL:@<href>{https://scrapbox.io/product, https://scrapbox.io/product}@<br>{}
 
-5段階評価で難易度を記載します。Scrapboxの難易度は星4つです。
+5段階評価で難易度を記載します。「Scrapbox」サイトの難易度は星4つです。
 
 難易度：★★★★
 
@@ -121,7 +121,7 @@ Download Middlewareのところからコメントアウトされているので�
 DOWNLOADER_MIDDLEWARES = {
     'scrapy_splash.SplashCookiesMiddleware': 723,
     'scrapy_splash.SplashMiddleware': 725,
-    'techbookfest_scrapy.middlewares.TechbookfestScrapyDownloaderMiddleware': 810,
+    'techbookfest_scrapy.middlewares@<embed>$|latex|\linebreak\hspace*{5ex}$.TechbookfestScrapyDownloaderMiddleware': 810,
 }
 //}
 
@@ -225,6 +225,7 @@ SplashのLua scriptと呼ばれるJavaScriptを記述します。今回のサイ
 詳しいことは公式ドキュメントとして記載してあります。
 
 Website is not rendered correctly
+
 @<href>{https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly, https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly}
 
 Dockerで最初からプライベートモードをオフにして起動も可能ですが、安全な運用としてはLua scriptにてモード切替をするようにしました。

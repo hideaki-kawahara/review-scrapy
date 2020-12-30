@@ -8,11 +8,11 @@ Lazy loading画面はJavaScriptが画面のレンダリングをして、ブラ�
 
 前の章に引き続きJavaScriptレンダリングとしてSplashを利用します。
 
-対象サイトは「技術書典10オンラインマーケットの新刊」でログイン無しにてアクセスできるページです。
+対象サイトは「技術書典10オンラインマーケット」でログイン無しにてアクセスできるページです。
 
 URL:@<href>{https://techbookfest.org/event/tbf10/market/newbook, https://techbookfest.org/event/tbf10/market/newbook}@<br>{}
 
-5段階評価で難易度を記載します。「技術書典10オンラインマーケットの新刊」サイトの難易度は星5つです。
+5段階評価で難易度を記載します。「技術書典10オンラインマーケット」サイトの難易度は星5つです。
 
 難易度：★★★★★
 
@@ -98,7 +98,7 @@ function main(splash)
 end
 """
 
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0)@<embed>$|latex|\linebreak\hspace*{25ex}$ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 
 class TechbookfestUrlSpider(scrapy.Spider):
     name = 'techbookfest_url'
@@ -131,7 +131,7 @@ class TechbookfestUrlSpider(scrapy.Spider):
         openning = ''
 
         for information in response.css('div.css-1dbjc4n div.r-18u37iz'):
-            for h2_tag in information.css('div.css-1dbjc4n div.r-13awgt0 div.r-1jkjb'):
+            for h2_tag in information.css('div.css-1dbjc4n div.r-13awgt0@<embed>$|latex|\linebreak\hspace*{25ex}$ div.r-1jkjb'):
                 title = h2_tag.css('h2::text').extract_first()
             for money_tag in information.css('div.css-18t94o4'):
                 money = money_tag.css('div.css-901oao::text').extract()
@@ -148,7 +148,7 @@ class TechbookfestUrlSpider(scrapy.Spider):
                 elif '松' in money[0]:
                     money_items[3] = ':'.join(money)
             for event in information.css('div.css-1dbjc4n'):
-                openning_tag = event.css('div.r-1enofrn::text').extract_first()
+                openning_tag = event.css('div.r-1enofrn::text')@<embed>$|latex|\linebreak\hspace*{25ex}$.extract_first()
                 if openning_tag is None:
                     pass
                 elif '初出イベント' in openning_tag:
@@ -210,7 +210,7 @@ end
 書籍詳細もLazy loadingを使用しているので、Waitを入れています。前の章と同じようにプライベートモードだと正しくJavaScriptが動作しないので、プライベートモードをオフにしてからJavaScriptレンダリングを行います。
 
 //emlist[][python]{
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0)@<embed>$|latex|\linebreak\hspace*{25ex}$ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 //}
 
 Scrapyの設定でユーザーエージェントが利用できますが、JavaScriptレンダリングでは未設定になるためSpiderの方で用意します。

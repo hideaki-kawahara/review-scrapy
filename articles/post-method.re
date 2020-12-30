@@ -4,6 +4,7 @@
 POSTメソッドは投稿フォームの完了画面やショッピングカートのような、URLをブックマークされると少々困るところで使用することが多く、単なる画面の切り替えやページネーションの画面遷移などでは使われなくなりました。@<br>{}
 
 2010年ごろは、何でもPOSTメソッドで画面遷移するサイトが存在しました。Strutsフレームワークが代表的で、2020年も政府系のサイトでは非常に多く使われおり、Struts2の脆弱性問題で少し減りました。
+
 また、2020年になってもシステム移行をしてないところが残っており、これらのサイトはスマートフォンに対応しておらず、文字コードもShiftJISで表示されていることが多いです。@<br>{}
 
 
@@ -13,7 +14,7 @@ POSTメソッドは投稿フォームの完了画面やショッピングカー�
 
 URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}@<br>{}
 
-5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は星2つです。
+5段階評価で難易度を記載します。「国土交通省の賃貸住宅管理業者」サイトの難易度は星2つです。
 
 難易度：★★
 
@@ -73,7 +74,7 @@ class EtsuranMlitSpider(scrapy.Spider):
     start_urls = ['https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do']
     pref = '11'
 
-    def __init__(self, pref = '11', *args, **kwargs):
+    def __init__(self, pref='11', *args, **kwargs):
         super(EtsuranMlitSpider, self).__init__(*args, **kwargs)
         self.pref = pref
 
@@ -141,7 +142,7 @@ start_urlsはスクレイピングするURLを配列で指定します。デフ�
 prefは下で使用するデフォルトの地域を設定しています。
 
 //emlist[][python]{
-def __init__(self, pref = '11', *args, **kwargs):
+def __init__(self, pref='11', *args, **kwargs):
     super(EtsuranMlitSpider, self).__init__(*args, **kwargs)
     self.pref = pref
 //}

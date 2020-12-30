@@ -114,11 +114,11 @@ class YahooNewsSpider(scrapy.Spider):
     def parse(self, response):
         for items in response.css('li.newsFeed_item'):
             yield YahooNewsScrapyItem(
-                url = items.css('a.newsFeed_item_link::attr(href)').extract_first(),
-                title = items.css('div.newsFeed_item_title::text').extract_first()
+                url = items.css('a.newsFeed_item_link::attr(href)')@<embed>$|latex|\linebreak\hspace*{30ex}$.extract_first(),
+                title = items.css('div.newsFeed_item_title::text')@<embed>$|latex|\linebreak\hspace*{30ex}$.extract_first()
             )
 
-        next_link = response.css('li.pagination_item-next a::attr(href)').extract_first()
+        next_link = response.css('li.pagination_item-next a::attr(href)')@<embed>$|latex|\linebreak\hspace*{25ex}$.extract_first()
         if next_link is None:
             return
         yield scrapy.Request(response.urljoin(next_link), callback=self.parse)
@@ -172,7 +172,7 @@ urlとして取得するのは@<code>{a.newsFeed_item_link::attr(href)}になり
 titleとして取得するのは@<code>{div.newsFeed_item_title::text}になります。classに指定されている@<code>{newsFeed_item_title}のdivタグを情報を取得します。そして@<code>{::text}が指定されているのでdivタグで囲われているテキスト情報だけが取得できます。
 
 //emlist[][python]{
-next_link = response.css('li.pagination_item-next a::attr(href)').extract_first()
+next_link = response.css('li.pagination_item-next a::attr(href)')@<embed>$|latex|\linebreak\hspace*{25ex}$.extract_first()
 if next_link is None:
     return
 yield scrapy.Request(response.urljoin(next_link), callback=self.parse)
