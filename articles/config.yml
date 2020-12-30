@@ -22,7 +22,7 @@ bookname: scrapy-practice
 language: ja
 
 # 書名
-booktitle: {name: "　PythonとScrapyを使った　　Webスクレイピング実践編　〜あのサイトをスクレイピングするまで！〜", file-as: "Scrapy実践編"}
+booktitle: {name: "　PythonとScrapyを使ったWebスクレイピング実践編　〜あのサイトをスクレイピングするまで！〜", file-as: "Scrapy実践編"}
 
 # 著者名。「, 」で区切って複数指定できる
 aut: [{name: "ブライトシステム編", file-as: "ブライトシステムヘン"}]
@@ -74,7 +74,7 @@ date: 2020-12-14
 # 複数指定する場合は次のように記述する
 # [["初版第1刷の日付", "初版第2刷の日付"], ["第2版第1刷の日付"]]
 # 日付の後ろを空白文字で区切り、任意の文字列を置くことも可能。
-history: [["2020-12-14 技術書典10版 v1.0.0"]]
+history: [["2020-12-31 技術書典10版 v1.0.0"]]
 # 権利表記(配列で複数指定可)
 # rights: (C) 2016 Re:VIEW Developers
 rights: (C) 2020 ブライトシステム
