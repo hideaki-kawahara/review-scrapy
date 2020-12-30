@@ -63,10 +63,9 @@ class TechbookfestScrapyItem(scrapy.Item):
     openning = scrapy.Field()
 //}
 
-次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
+次は@<hd>{first-step|Scrapyの設定}を設定し、あわせて@<hd>{javascript|JavaScriptレンダリング用の設定}も設定しておきます。
 
-あわせて@<hd>{javascript|JavaScriptレンダリング用の設定}も設定しておきます。
-
+次はSpiderを作成します。
 
 == Spider作成
 Spiderであるtechbookfest_url.pyを編集します。編集するファイルは@<code>{techbookfest_scrapy/techbookfest_scrapy/spiders/techbookfest_url.py}です。

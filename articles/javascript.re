@@ -91,9 +91,7 @@ class ScrapboxScrapyItem(scrapy.Item):
     url = scrapy.Field()
 //}
 
-次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
-
-次はJavaScriptレンダリング用の設定をします。
+次は@<hd>{first-step|Scrapyの設定}を設定し、次はJavaScriptレンダリング用の設定をします。
 
 
 == JavaScriptレンダリング用の設定

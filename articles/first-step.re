@@ -60,14 +60,14 @@ class YahooNewsScrapyItem(scrapy.Item):
     title = scrapy.Field()
 //}
 
-次はディレイタイムの設定をします。
+次はScrapyの設定をします。
 
-== ディレイタイムの設定
-ディレイタイムの設定します。
+== Scrapyの設定
+Scrapyの設定を行います。編集するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
 
-これはSpiderが次のアクションに入るまでの待ち時間を設定します。編集するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
+まずは、ディレイタイムの設定します。
 
-DOWNLOAD_DELAYがコメントアウトされているので、3秒待つように下のようにコメントアウトを解除するように編集します。
+これはSpiderが次のアクションに入るまでの待ち時間を設定します。DOWNLOAD_DELAYがコメントアウトされているので、3秒待つように下のようにコメントアウトを解除するように編集します。
 
 
 //list[DOWNLOAD_DELAY][設定：settings.py][python]{
@@ -76,13 +76,7 @@ DOWNLOAD_DELAY = 3
 
 次はキャッシュの設定をします。
 
-== キャッシュの設定
-
-キャッシュの設定します。
-
-これはSpiderがスクレイピングするサイトをキャッシュする設定をします。編集するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
-
-HTTPCACHE_ENABLEDのところからコメントアウトされているので、下のようにコメントアウトを解除するように編集します。
+これはSpiderがスクレイピングするサイトをキャッシュする設定をします。HTTPCACHE_ENABLEDのところからコメントアウトされているので、下のようにコメントアウトを解除するように編集します。
 
 //list[HTTPCACHE][設定：settings.py][python]{
 HTTPCACHE_ENABLED = True
