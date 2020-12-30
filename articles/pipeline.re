@@ -8,7 +8,7 @@ Qiitaのトレンドをスクレイピングして分析してみます。
 
 URL:@<href>{https://qiita.com/, https://qiita.com/}@<br>{}
 
-5段階評価で難易度を記載します。Qiitaの難易度は1つですが、データベースを使用するので難易度は2つです。
+5段階評価で難易度を記載します。Qiitaの難易度は1つですが、データベースを使用するので難易度は星2つです。
 
 難易度：★★
 
@@ -344,26 +344,28 @@ docker-compose down
 
 実行する手順を下に記載します。
 
- 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+//emlist[][bash]{
+ 1. ソースコードをCloneするディレクトリーを作成する。
    @<code>{mkdir -p scrapy-source}
- 2. Cloneする。@<br>{}
+ 2. Cloneする。
    @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
- 3. chapter3をcheckoutする。@<br>{}
+ 3. chapter3をcheckoutする。
    @<code>{git checkout chapter3}
- 4. 仮想環境を作成する。@<br>{}
+ 4. 仮想環境を作成する。
    @<code>{python -m venv .venv}
- 5. 仮想環境に入る。@<br>{}
+ 5. 仮想環境に入る。
    @<code>{source .venv/bin/activate}
- 6. ライブラリーをインストールする。@<br>{}
+ 6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
  7. Dockerディレクトリーに入る。
    @<code>{cd docker}
  8. Dockerを起動する。
    @<code>{docker-compose up -d}
- 9. 該当のディレクトーに入る。@<br>{}
+ 9. 該当のディレクトーに入る。
    @<code>{cd ../qiita_trend_scrapy}
- 10. 実行する。@<br>{}
+ 10. 実行する。
    @<code>{scrapy crawl qiita_trend}
+//}
 
 ※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter3のディレクトリーは消えません。気になるようなら削除してください。
 

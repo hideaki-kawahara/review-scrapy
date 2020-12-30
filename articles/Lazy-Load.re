@@ -12,13 +12,13 @@ Lazy loading画面はJavaScriptが画面のレンダリングをして、ブラ�
 
 URL:@<href>{https://techbookfest.org/event/tbf10/market/newbook, https://techbookfest.org/event/tbf10/market/newbook}@<br>{}
 
-5段階評価で難易度を記載します。技術書典10オンラインマーケットの新刊の難易度は5つです。
+5段階評価で難易度を記載します。「技術書典10オンラインマーケットの新刊」サイトの難易度は星5つです。
 
 難易度：★★★★★
 
 
 == 前準備
-環境構築@<chap>{building-environmen}をしたあとに@<hd>{javascript|JavaScriptレンダリングの導入}と@<hd>{javascript|Splashの準備}を行います。
+@<chap>{building-environmen}をしたあとに@<hd>{javascript|JavaScriptレンダリングの導入}と@<hd>{javascript|Splashの準備}を行います。
 
 == プロジェクトの作成
 次にプロジェクトを作成します。Dockerディレクトリーに居る場合は上の階層に戻り、下のコマンドを実行するとtechbookfest_scrapyというディレクトリーが作成されます。
@@ -55,7 +55,8 @@ class TechbookfestScrapyItem(scrapy.Item):
     money2 = scrapy.Field()
     money3 = scrapy.Field()
     money4 = scrapy.Field()
-    openning = scrapy.Field()//}
+    openning = scrapy.Field()
+//}
 
 次にディレイタイムの設定とキャッシュの設定をしますが、@<hd>{first-step|ディレイタイムの設定}と@<hd>{first-step|キャッシュの設定}と同じになるので、同じように設定しておきます。
 
@@ -297,7 +298,7 @@ divタグのclassを検索して各種情報があるので、その中にある
 
 @<code>{money_tag.css('div.css-901oao::text')}で価格を取得しますが、複数あるので内容を確認して別の配列に入れておきます。
 
-@<code>{event.css('div.r-1enofrn::text')}で初出イベントを取得します。この項目は出店サークルの任意入力なので「技術書典10」の数字が全角のときや半角のときがありますが、そのままとします。
+@<code>{event.css('div.r-1enofrn::text')}で初出イベントを取得します。この項目は出展サークルの任意入力なので「技術書典10」の数字が全角のときや半角のときがありますが、そのままとします。
 
 //emlist[][python]{
 yield TechbookfestScrapyItem(
@@ -329,26 +330,28 @@ scrapy crawl techbookfest_url
 
 実行する手順を下に記載します。
 
- 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+//emlist[][bash]{
+ 1. ソースコードをCloneするディレクトリーを作成する。
    @<code>{mkdir -p scrapy-source}
- 2. Cloneする。@<br>{}
+ 2. Cloneする。
    @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
- 3. chapter5をcheckoutする。@<br>{}
+ 3. chapter5をcheckoutする。
    @<code>{git checkout chapter5}
- 4. 仮想環境を作成する。@<br>{}
+ 4. 仮想環境を作成する。
    @<code>{python -m venv .venv}
- 5. 仮想環境に入る。@<br>{}
+ 5. 仮想環境に入る。
    @<code>{source .venv/bin/activate}
- 6. ライブラリーをインストールする。@<br>{}
+ 6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
  7. Dockerディレクトリーに入る。
    @<code>{cd docker}
  8. Dockerを起動する。
    @<code>{docker-compose up -d}
- 9. 該当のディレクトーに入る。@<br>{}
+ 9. 該当のディレクトーに入る。
    @<code>{cd ../techbookfest_scrapy}
- 10. 実行する。@<br>{}
+ 10. 実行する。
    @<code>{scrapy crawl techbookfest_url}
+//}
 
 ※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter5のディレクトリーは消えません。気になるようなら削除してください。
 

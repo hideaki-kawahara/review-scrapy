@@ -7,9 +7,27 @@
 
 URL:@<href>{https://news.yahoo.co.jp/topics/business, https://news.yahoo.co.jp/topics/business}@<br>{}
 
-5段階評価で難易度を記載します。ヤフーニュースの難易度は1つです。
+5段階評価で難易度を記載します。ヤフーニュースの難易度は星1つです。
 
 難易度：★
+
+== Scrapyの構成について
+Scrapyは下の4つのパーツで構成されており、このパーツの作成、および設定をすることでWebスクレイピングができるようになります。
+
+ * Spiderの作成
+ * Itemの設定
+ * Scrapyの設定
+ * Pipelineの設定（設定しないときもあります）
+
+Spiderを作成してWebスクレイピングする内容を記載します。Webスクレイピングされた内容をItemに引き渡すことで情報を取得します。
+
+Itemの設定は、Scrapyの標準のミドルウェアで、取得した情報がSpiderによってスクレイピングしたあとItemを処理します。
+
+Scrapyの設定は、Webスクレイピングするときの各種設定をします。ディレイタイムやキャッシュの設定や、Scrapyが提供するミドルウェアを有効にするのも、Scrapyの設定で行います。
+
+
+Pipelineの設定は、ItemがSpiderによってスクレイピングしたあと、ItemはPipelineに送信され、複数のミドルウェアを利用してItemを処理します。
+
 
 == プロジェクトの作成
 まずはプロジェクトを作成します。下のコマンドを実行するとyahoo_news_scrapyというディレクトリーが作成されます。
@@ -49,10 +67,10 @@ class YahooNewsScrapyItem(scrapy.Item):
 
 これはSpiderが次のアクションに入るまでの待ち時間を設定します。編集するファイルは@<code>{scrapy-source/yahoo_news_scrapy/yahoo_news_scrapy/settings.py}です。
 
-DOWNLOAD_DELAYがコメントアウトされているので、下のようにコメントアウトを解除するように編集します。
+DOWNLOAD_DELAYがコメントアウトされているので、3秒待つように下のようにコメントアウトを解除するように編集します。
 
 
-//list[DOWNLOAD_DELAY][ディレイタイムの設定][python]{
+//list[DOWNLOAD_DELAY][設定：settings.py][python]{
 DOWNLOAD_DELAY = 3
 //}
 
@@ -66,7 +84,7 @@ DOWNLOAD_DELAY = 3
 
 HTTPCACHE_ENABLEDのところからコメントアウトされているので、下のようにコメントアウトを解除するように編集します。
 
-//list[HTTPCACHE][キャッシュの設定][python]{
+//list[HTTPCACHE][設定：settings.py][python]{
 HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
@@ -197,22 +215,25 @@ scrapy crawl yahoo_news -o yahoo_news.csv
 
 実行する手順を下に記載します。
 
- 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+//emlist[][bash]{
+ 1. ソースコードをCloneするディレクトリーを作成する。
    @<code>{mkdir -p scrapy-source}
- 2. Cloneする。@<br>{}
+ 2. Cloneする。
    @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
- 3. chapter1をcheckoutする。@<br>{}
+ 3. chapter1をcheckoutする。
    @<code>{git checkout chapter1}
- 4. 仮想環境を作成する。@<br>{}
+ 4. 仮想環境を作成する。
    @<code>{python -m venv .venv}
- 5. 仮想環境に入る。@<br>{}
+ 5. 仮想環境に入る。
    @<code>{source .venv/bin/activate}
- 6. ライブラリーをインストールする。@<br>{}
+ 6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
- 7. 該当のディレクトーに入る。@<br>{}
+ 7. 該当のディレクトーに入る。
    @<code>{cd yahoo_news_scrapy}
- 8. 実行する。@<br>{}
+ 8. 実行する。
    @<code>{scrapy crawl yahoo_news}
+//}
+
 
 ※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter1のディレクトリーは消えません。気になるようなら削除してください。
 

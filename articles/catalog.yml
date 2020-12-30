@@ -8,9 +8,9 @@ CHAPS:
   - pipeline.re
   - javascript.re
   - Lazy-Load.re
+  - matome.re
 
 APPENDIX:
-  - matome.re
 
 POSTDEF:
   - contributors.re

@@ -2,7 +2,9 @@
 
 動的画面をスクレイピングします。
 
-動的画面はJavaScriptが画面のレンダリングを完了したあとに、はじめて画面として表示されるため、HTMLを取得するだけではスクレイピングができません。この場合SeleniumやPuppeteerなどのヘッドレスブラウザでavaScriptレンダリングを行わせてからスクレイピングします。
+動的画面はJavaScriptが画面のレンダリングを完了したあとに、はじめて画面として表示されるため、HTMLを取得するだけではスクレイピングができません。
+
+この場合SeleniumやPuppeteerなどのヘッドレスブラウザでJavaScriptレンダリングを行わせてからスクレイピングします。
 
 今回はJavaScriptレンダリングとしてSplashを利用します。
 
@@ -10,7 +12,7 @@
 
 URL:@<href>{https://scrapbox.io/product, https://scrapbox.io/product}@<br>{}
 
-5段階評価で難易度を記載します。Scrapboxの難易度は4つです。
+5段階評価で難易度を記載します。Scrapboxの難易度は星4つです。
 
 難易度：★★★★
 
@@ -220,7 +222,7 @@ end
 //}
 SplashのLua scriptと呼ばれるJavaScriptを記述します。今回のサイトはプライベートモードだと正しくJavaScriptが動作しないので、Lua scriptを使い一度プライベートモードをオフにしてからJavaScriptレンダリングを行います。
 
-詳しいことは下に記載しております。
+詳しいことは公式ドキュメントとして記載してあります。
 
 Website is not rendered correctly
 @<href>{https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly, https://splash.readthedocs.io/en/stable/faq.html#website-is-not-rendered-correctly}
@@ -292,26 +294,28 @@ scrapy crawl scrapbox_url -a start_url=https://scrapbox.io/wakaba-manga/
 
 実行する手順を下に記載します。
 
- 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+//emlist[][bash]{
+ 1. ソースコードをCloneするディレクトリーを作成する。
    @<code>{mkdir -p scrapy-source}
- 2. Cloneする。@<br>{}
+ 2. Cloneする。
    @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
- 3. chapter4をcheckoutする。@<br>{}
+ 3. chapter4をcheckoutする。
    @<code>{git checkout chapter4}
- 4. 仮想環境を作成する。@<br>{}
+ 4. 仮想環境を作成する。
    @<code>{python -m venv .venv}
- 5. 仮想環境に入る。@<br>{}
+ 5. 仮想環境に入る。
    @<code>{source .venv/bin/activate}
- 6. ライブラリーをインストールする。@<br>{}
+ 6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
  7. Dockerディレクトリーに入る。
    @<code>{cd docker}
  8. Dockerを起動する。
    @<code>{docker-compose up -d}
- 9. 該当のディレクトーに入る。@<br>{}
+ 9. 該当のディレクトーに入る。
    @<code>{cd ../scrapbox_scrapy}
- 10. 実行する。@<br>{}
+ 10. 実行する。
    @<code>{scrapy crawl scrapbox_url}
+//}
 
 ※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter4のディレクトリーは消えません。気になるようなら削除してください。
 

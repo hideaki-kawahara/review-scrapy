@@ -3,7 +3,8 @@
 
 POSTメソッドは投稿フォームの完了画面やショッピングカートのような、URLをブックマークされると少々困るところで使用することが多く、単なる画面の切り替えやページネーションの画面遷移などでは使われなくなりました。@<br>{}
 
-2010年ごろは、何でもPOSTメソッドで画面遷移するサイトが存在しました。Strutsフレームワークが代表的で、2020年も政府系のサイトでは非常に多く使われおり、Struts2の脆弱性問題で少し減りましたが、システム移行をしてないところが残っております。また、これらのサイトはスマートフォンに対応しておらず、文字コードもShiftJISで表示されていることが多いです。@<br>{}
+2010年ごろは、何でもPOSTメソッドで画面遷移するサイトが存在しました。Strutsフレームワークが代表的で、2020年も政府系のサイトでは非常に多く使われおり、Struts2の脆弱性問題で少し減りました。
+また、2020年になってもシステム移行をしてないところが残っており、これらのサイトはスマートフォンに対応しておらず、文字コードもShiftJISで表示されていることが多いです。@<br>{}
 
 
 あわせて、この章ではクローリングするときにパラメーターを指定して、スクレイピングする情報を変化させてみます。@<br>{}
@@ -12,7 +13,7 @@ POSTメソッドは投稿フォームの完了画面やショッピングカー�
 
 URL:@<href>{https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do, https://etsuran.mlit.go.jp/TAKKEN/chintaiKensaku.do}@<br>{}
 
-5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は2つです。
+5段階評価で難易度を記載します。国土交通省の賃貸住宅管理業者の難易度は星2つです。
 
 難易度：★★
 
@@ -209,22 +210,24 @@ scrapy crawl etsuran_mlit -a pref=01
 
 実行する手順を下に記載します。
 
- 1. ソースコードをCloneするディレクトリーを作成する。@<br>{}
+//emlist[][bash]{
+ 1. ソースコードをCloneするディレクトリーを作成する。
    @<code>{mkdir -p scrapy-source}
- 2. Cloneする。@<br>{}
+ 2. Cloneする。
    @<code>{git clone https://github.com/hideaki-kawahara/scrapy-source.git}
- 3. chapter2をcheckoutする。@<br>{}
+ 3. chapter2をcheckoutする。
    @<code>{git checkout chapter2}
- 4. 仮想環境を作成する。@<br>{}
+ 4. 仮想環境を作成する。
    @<code>{python -m venv .venv}
- 5. 仮想環境に入る。@<br>{}
+ 5. 仮想環境に入る。
    @<code>{source .venv/bin/activate}
- 6. ライブラリーをインストールする。@<br>{}
+ 6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
- 7. 該当のディレクトーに入る。@<br>{}
+ 7. 該当のディレクトーに入る。
    @<code>{cd mlit_scrapy}
- 8. 実行する。@<br>{}
+ 8. 実行する。
    @<code>{scrapy crawl etsuran_mlit}
+//}
 
 ※実行後に実行キャッシュディレクトリーが作成されるので、他のBrunchをcheckoutしてもchapter2のディレクトリーは消えません。気になるようなら削除してください。
 
