@@ -312,7 +312,7 @@ scrapy crawl scrapbox_url -a start_url=https://scrapbox.io/wakaba-manga/
    @<code>{cd docker}
  8. Dockerを起動する。
    @<code>{docker-compose up -d}
- 9. 該当のディレクトーに入る。
+ 9. 該当のディレクトリーに入る。
    @<code>{cd ../scrapbox_scrapy}
  10. 実行する。
    @<code>{scrapy crawl scrapbox_url}

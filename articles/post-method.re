@@ -224,7 +224,7 @@ scrapy crawl etsuran_mlit -a pref=01
    @<code>{source .venv/bin/activate}
  6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
- 7. 該当のディレクトーに入る。
+ 7. 該当のディレクトリーに入る。
    @<code>{cd mlit_scrapy}
  8. 実行する。
    @<code>{scrapy crawl etsuran_mlit}

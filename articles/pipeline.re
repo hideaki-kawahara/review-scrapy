@@ -89,7 +89,7 @@ psql -l
 //indepimage[list_of_database]
 
 == プロジェクトの作成
-次にプロジェクトを作成します。Dockerディレクトーから上の階層に戻り、下のコマンドを実行するとqiita_trend_scrapyというディレクトリーが作成されます。
+次にプロジェクトを作成します。Dockerディレクトリーから上の階層に戻り、下のコマンドを実行するとqiita_trend_scrapyというディレクトリーが作成されます。
 
 //list[startproject][Projectの作成][bash]{
 cd ..
@@ -358,7 +358,7 @@ docker-compose down
    @<code>{cd docker}
  8. Dockerを起動する。
    @<code>{docker-compose up -d}
- 9. 該当のディレクトーに入る。
+ 9. 該当のディレクトリーに入る。
    @<code>{cd ../qiita_trend_scrapy}
  10. 実行する。
    @<code>{scrapy crawl qiita_trend}

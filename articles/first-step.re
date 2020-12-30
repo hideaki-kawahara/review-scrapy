@@ -228,7 +228,7 @@ scrapy crawl yahoo_news -o yahoo_news.csv
    @<code>{source .venv/bin/activate}
  6. ライブラリーをインストールする。
    @<code>{pip install -r requirements.txt}
- 7. 該当のディレクトーに入る。
+ 7. 該当のディレクトリーに入る。
    @<code>{cd yahoo_news_scrapy}
  8. 実行する。
    @<code>{scrapy crawl yahoo_news}
