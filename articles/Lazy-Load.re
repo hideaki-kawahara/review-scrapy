@@ -103,7 +103,7 @@ function main(splash)
 end
 """
 
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0)@<embed>$|latex|\linebreak\hspace*{25ex}$ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0)@<embed>$|latex|\linebreak\hspace*{5ex}$ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 
 class TechbookfestUrlSpider(scrapy.Spider):
     name = 'techbookfest_url'
@@ -215,7 +215,7 @@ end
 書籍詳細もLazy loadingを使用しているので、Waitを入れています。前の章と同じようにプライベートモードだと正しくJavaScriptが動作しないので、プライベートモードをオフにしてからJavaScriptレンダリングを行います。
 
 //emlist[][python]{
-USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0)@<embed>$|latex|\linebreak\hspace*{25ex}$ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_1_0)@<embed>$|latex|\linebreak\hspace*{5ex}$ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36'
 //}
 
 Scrapyの設定でユーザーエージェントが利用できますが、JavaScriptレンダリングでは未設定になるためSpiderの方で用意します。

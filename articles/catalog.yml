@@ -8,9 +8,8 @@ CHAPS:
   - pipeline.re
   - javascript.re
   - Lazy-Load.re
-  - matome.re
 
 APPENDIX:
 
 POSTDEF:
-  - contributors.re
+  - atogaki.re
